@@ -1,2 +1,2 @@
 # HandMade
-A handmade-on-demand platform connecting customers with skilled artisans for any type of custom handmade work — with built-in order negotiation and escrow payment protection.
+HandMade is a full-stack web platform that bridges customers and independent artisans for any kind of custom handmade work. Customers browse seller portfolios, submit custom order requests with reference materials, and negotiate pricing and delivery timelines directly with sellers. Once both parties agree, payment is securely held by the platform in escrow and only released to the seller after the customer confirms delivery — ensuring trust on both sides of every transaction.
