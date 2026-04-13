@@ -1,4 +1,4 @@
-using ArtEva.Models.Enums;
+using HandMade.Domain.DomainEnums;
 using System;
 using System.ComponentModel.DataAnnotations;
 

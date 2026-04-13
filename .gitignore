@@ -362,5 +362,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+
 # Ignore static files
 ArtEva/wwwroot/
+
+# Ignore Copilot instructions file (personal)
+.github/copilot-instructions.md

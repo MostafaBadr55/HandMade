@@ -1,4 +1,4 @@
-﻿namespace ArtEva.Models.Enums
+﻿namespace HandMade.Domain.DomainEnums
 {
     public enum PaymentStatus
     {

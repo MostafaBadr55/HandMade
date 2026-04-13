@@ -1,5 +1,5 @@
 using ArtEva.DTOs.Order;
-using ArtEva.Models.Enums;
+using HandMade.Domain.DomainEnums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

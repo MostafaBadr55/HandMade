@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Design;
 
-namespace ArtEva.Models.Enums
+namespace HandMade.Domain.DomainEnums
 {
     public enum ProductStatus
     {
