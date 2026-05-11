@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="HandMade.Application/HandMade.Application.csproj" Id="7ab75386-57e9-4c05-afc2-f7f5ecf72fe0" />
   <Project Path="HandMade.Domain/HandMade.Domain.csproj" />
+  <Project Path="HandMade.Infrastructure/HandMade.Infrastructure.csproj" Id="c16289b9-16d4-4cc0-862b-7c85ccbd3db9" />
   <Project Path="HandMade/HandMade.csproj" />
 </Solution>

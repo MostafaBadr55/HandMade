@@ -1,0 +1,24 @@
+using HandMade.Domain.DomainEnums;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace HandMade.Domain.Entities
+{
+    
+
+    public class Notification : BaseModel
+    {
+        [Required]
+        [MaxLength(200)]
+        public string Title { get; set; }
+
+        [Required]
+        public string Message { get; set; }
+
+        public NotificationType Type { get; set; }
+
+        // Navigation Properties
+        public ICollection<UserNotification> UserNotifications { get; set; }
+    }
+}
