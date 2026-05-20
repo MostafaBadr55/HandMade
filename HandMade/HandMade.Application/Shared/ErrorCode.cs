@@ -22,5 +22,14 @@ namespace HandMade.Application.Shared
         EmailAlreadyExists = 3001,
         UserNameAlreadyExists = 3002,
         UserNotCreated= 3003,
+
+        //Login
+        UsernameOrPasswordIsInvalid = 5001,
+        InActiveAccount = 5002,
+
+        //Address
+        LabelMustBeProvided = 4001,
+        DetailedAddressNotProvided = 4002,
+        DefaultAddressNotAdded = 4003
     }
 }

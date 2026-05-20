@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HandMade.Application.Authentication.Queries
+namespace HandMade.Application.Authentication.Registration.Queries
 {
     public record FindUserByEmailQuery(string email) : IRequest<RequestResult<User>>;
 

@@ -4,7 +4,7 @@ namespace HandMade.Domain.Entities
 {
     public class SubCategory : BaseModel
     {
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         [Required]
         [MaxLength(100)]

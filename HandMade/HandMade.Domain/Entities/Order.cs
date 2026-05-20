@@ -6,17 +6,16 @@ namespace HandMade.Domain.Entities
     public class Order : BaseModel
     {
 
-        public int? CartItemId { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public Guid? CartItemId { get; set; }
+        public Guid UserId { get; set; }
 
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
         public Shop Shop { get; set; }
 
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
         public Product Product { get; set; }
 
-        public int? ShippingAddressId { get; set; }
+        public Guid? ShippingAddressId { get; set; }
         public Address ShippingAddress { get; set; }
 
         [Required, MaxLength(40)]
@@ -40,7 +39,7 @@ namespace HandMade.Domain.Entities
         public int? ExecutionDays { get; set; }
         public DateTime? ConfirmedAt { get; set; }
         public string? CancellationReason { get; set; }
-        public int? CancelledByUserId { get; set; }
+        public Guid? CancelledByUserId { get; set; }
         public DateTime? CancelledAt { get; set; }
 
         // Calculated Helper

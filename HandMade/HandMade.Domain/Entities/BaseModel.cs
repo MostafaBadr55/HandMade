@@ -5,7 +5,7 @@ namespace HandMade.Domain.Entities
 {
     public abstract class BaseModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

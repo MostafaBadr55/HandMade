@@ -71,17 +71,17 @@ namespace HandMade.Infrastructure.Identity
         /// </summary>
         /// <param name="user">The domain user whose password to check.</param>
         /// <param name="password">The password to verify.</param>
-        /// <returns><c>true</c> if the password is correct; otherwise, <c>false</c>.</returns>
-        public async Task<bool> CheckPasswordAsync(User user, string password)
+        /// <returns><c>true</c> if the password is correct; if incorrect <c>false</c>; if the user not found returns <c>null</c></returns>
+        public async Task<bool?> CheckPasswordAsync(User user, string password)
         {
             var identityUser = await _userManager.FindByNameAsync(user.UserName);
 
-            if (identityUser is null) return false;
+            if (identityUser is null) return null;
 
             var result = await _signInManager
                 .CheckPasswordSignInAsync(identityUser, password, lockoutOnFailure: false);
 
-            return result.Succeeded;
+            return result.Succeeded? true : false;
         }
         /// <summary>
         /// Creates a new user account with the specified password asynchronously.

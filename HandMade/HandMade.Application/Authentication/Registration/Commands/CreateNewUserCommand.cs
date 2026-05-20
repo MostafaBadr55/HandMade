@@ -1,4 +1,4 @@
-﻿using HandMade.Application.Authentication.DTOs;
+﻿using HandMade.Application.Authentication.Registration.DTOs;
 using HandMade.Application.Interfaces;
 using HandMade.Application.Shared;
 using HandMade.Domain.Entities;
@@ -7,14 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HandMade.Application.Authentication.Commands
+namespace HandMade.Application.Authentication.Registration.Commands
 {
     public record CreateNewUserCommand(
         string userName,
         string email,
         string password,
-        string phoneNumber= "",
-        string address= ""
+        string phoneNumber= ""
         ) : IRequest<RequestResult<CreatedUserDTO>>;
 
     public class CreateNewUserCommandHandler : IRequestHandler<CreateNewUserCommand, RequestResult<CreatedUserDTO>>
@@ -41,7 +40,6 @@ namespace HandMade.Application.Authentication.Commands
                 UserName = request.userName,
                 Email = request.email,
                 PhoneNumber = request.phoneNumber,
-                Address = request.address,
                 IsSeller= false,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow

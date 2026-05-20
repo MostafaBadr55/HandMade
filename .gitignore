@@ -368,3 +368,6 @@ ArtEva/wwwroot/
 
 # Ignore Copilot instructions file (personal)
 .github/copilot-instructions.md
+
+# Ignore Entity Framework migration files/folders (prevent pushing generated migrations)
+**/Migrations/**

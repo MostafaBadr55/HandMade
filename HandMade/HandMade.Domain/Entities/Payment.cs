@@ -7,8 +7,8 @@ namespace HandMade.Domain.Entities
 {
     public class Payment : BaseModel
     {
-        public int OrderId { get; set; }
-        public int UserId { get; set; }
+        public Guid OrderId { get; set; }
+        public Guid UserId { get; set; }
 
         public decimal Amount { get; set; }
 
@@ -21,7 +21,6 @@ namespace HandMade.Domain.Entities
 
         // Navigation Properties
         public Order Order { get; set; }
-        public User User { get; set; }
         public ICollection<Refund> Refunds { get; set; }
     }
 }

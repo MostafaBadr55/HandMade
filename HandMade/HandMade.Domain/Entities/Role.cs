@@ -6,13 +6,11 @@ namespace HandMade.Domain.Entities
     {
         public Guid Id { get; set; }
         public string RoleName { get; set; }
-        
+
         [MaxLength(200)]
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
-        // Navigation Properties
-        public ICollection<UserRole> UserRoles { get; set; }
     }
 }

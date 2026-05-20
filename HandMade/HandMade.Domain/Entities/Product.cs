@@ -30,9 +30,9 @@ namespace HandMade.Domain.Entities
         [Timestamp]
         public byte[]? RowVersion { get; set; }
 
-        public int ShopId { get; set; }
-        public int CategoryId { get; set; }
-        public int SubCategoryId { get; set; }
+        public Guid ShopId { get; set; }
+        public Guid CategoryId { get; set; }
+        public Guid SubCategoryId { get; set; }
         // Navigation Properties
         #region nav
         public Shop Shop { get; set; }

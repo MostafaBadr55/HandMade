@@ -14,4 +14,8 @@
     <ProjectReference Include="..\HandMade.Domain\HandMade.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Addresses\Queries\" />
+  </ItemGroup>
+
 </Project>

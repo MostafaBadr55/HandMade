@@ -29,7 +29,6 @@ namespace HandMade.Domain.Entities
         public byte[]? RowVersion { get; set; }
 
         // Navigation Properties
-        public User Owner { get; set; }
         public ICollection<Product> Products { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<ShopFollower> ShopFollowers { get; set; }

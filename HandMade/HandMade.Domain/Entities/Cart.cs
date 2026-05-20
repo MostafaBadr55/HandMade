@@ -3,7 +3,6 @@
     public class Cart : BaseModel
     {
         public Guid UserId { get; set; }
-        public User User { get; set; }
  
         public DateTime? CheckedOutAt { get; set; }
 

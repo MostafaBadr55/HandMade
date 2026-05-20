@@ -9,7 +9,7 @@ namespace HandMade.Application.Interfaces
         Task<User?> GetUserByUsernameAsync(string username);
         Task<User?> GetUserByIdAsync(Guid Id);
         Task<RepoResult<User>> CreateAsync(User user, string password);
-        Task<bool> CheckPasswordAsync(User user, string password);
+        Task<bool?> CheckPasswordAsync(User user, string password);
         Task<IList<string>> GetRolesAsync(Guid userId);
     }
 }

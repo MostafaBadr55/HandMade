@@ -7,8 +7,8 @@ namespace HandMade.Domain.Entities
 
     public class Shipment : BaseModel
     {
-        public int OrderId { get; set; }
-        public int ShippingAddressId { get; set; }
+        public Guid OrderId { get; set; }
+        public Guid ShippingAddressId { get; set; }
 
         [MaxLength(100)]
         public string Carrier { get; set; }

@@ -3,7 +3,7 @@ using HandMade.Application.Shared;
 using HandMade.Domain.Entities;
 using MediatR;
 
-namespace HandMade.Application.Authentication.Queries
+namespace HandMade.Application.Authentication.Registration.Queries
 {
     public record GetUserByUserNameQuery(string username) : IRequest<RequestResult<User?>>;
 

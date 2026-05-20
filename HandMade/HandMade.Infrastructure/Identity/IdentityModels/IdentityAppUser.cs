@@ -1,5 +1,6 @@
 using HandMade.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,21 +10,19 @@ namespace HandMade.Infrastructure.Identity.IdentityModels
 {
     public class IdentityAppUser: IdentityUser<Guid>
     {
-        public bool IsSeller { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsSeller { get; set; } = false;
+        public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
         #region nav Prop
         // Navigation Properties
-        public ICollection<IdentityAppUserRole> UserRoles { get; set; }
         public ICollection<Shop> Shops { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<Payment> Payments { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Favorite> Favorites { get; set; }
         public ICollection<UserNotification> UserNotifications { get; set; }
-        public ICollection<Address> Addresses { get; set; }
         public ICollection<Dispute> Disputes { get; set; }
         public ICollection<ShopFollower> ShopFollowers { get; set; }
         public ICollection<Review> WrittenReviews { get; set; }  // reviews written by the user

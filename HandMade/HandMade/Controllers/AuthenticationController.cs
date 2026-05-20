@@ -1,4 +1,5 @@
-﻿using HandMade.Application.Authentication.Orchestrators;
+﻿using HandMade.Application.Authentication.Registration.Orchestrators;
+using HandMade.Domain.Entities;
 using HandMade.ViewModels;
 using HandMade.ViewModels.Authentication;
 using MediatR;
@@ -27,5 +28,7 @@ namespace HandMade.Controllers
 
             return ResponseViewModel<RegistrationResponseVM>.Success(response);
         }
+    
+        
     }
 }

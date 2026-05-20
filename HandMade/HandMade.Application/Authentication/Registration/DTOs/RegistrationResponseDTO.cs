@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HandMade.Application.Authentication.DTOs
+namespace HandMade.Application.Authentication.Registration.DTOs
 {
     public class RegistrationResponseDTO
     {

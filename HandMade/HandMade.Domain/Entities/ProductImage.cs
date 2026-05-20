@@ -4,7 +4,7 @@ namespace HandMade.Domain.Entities
 {
     public class ProductImage : BaseModel
     {
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
         [Required]
         [MaxLength(400)]

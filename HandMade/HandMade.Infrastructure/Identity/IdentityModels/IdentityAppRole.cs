@@ -11,6 +11,5 @@ namespace HandMade.Infrastructure.Identity.IdentityModels
         public DateTime CreatedAt { get; set; }
 
         // Navigation Properties
-        public ICollection<IdentityAppUserRole> UserRoles { get; set; }
     }
 }
