@@ -19,9 +19,9 @@ namespace HandMade.Application.Authentication.Registration.Commands
     public class CreateNewUserCommandHandler : IRequestHandler<CreateNewUserCommand, RequestResult<CreatedUserDTO>>
     {
 
-        private readonly IAuthRepository _authRepository;
+        private readonly IAuthServices _authRepository;
 
-        public CreateNewUserCommandHandler(IAuthRepository authRepository)
+        public CreateNewUserCommandHandler(IAuthServices authRepository, IUnitOfWork unitOfWork)
         {
             _authRepository = authRepository;
         }
@@ -51,7 +51,7 @@ namespace HandMade.Application.Authentication.Registration.Commands
                 return RequestResult<CreatedUserDTO>.Success(new CreatedUserDTO(errors, false));
             }
 
-            return RequestResult<CreatedUserDTO>.Success(new CreatedUserDTO(user.Id));
+            return RequestResult<CreatedUserDTO>.Success(new CreatedUserDTO(result.Value.Id));
         }
     }
     

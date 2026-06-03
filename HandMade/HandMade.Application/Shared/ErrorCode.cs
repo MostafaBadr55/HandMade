@@ -17,6 +17,9 @@ namespace HandMade.Application.Shared
         UsernameAlreadyExists = 1005,
 
         NoRolesFound= 2001,
+        ThisUserAlreadyHasThisRole = 2002,
+        RoleAddingFaild=2003,
+        FailedToUpdateSellerBool = 2004,
 
         //Registration
         EmailAlreadyExists = 3001,
@@ -24,7 +27,7 @@ namespace HandMade.Application.Shared
         UserNotCreated= 3003,
 
         //Login
-        UsernameOrPasswordIsInvalid = 5001,
+        InvalidUsernameOrPassword = 5001,
         InActiveAccount = 5002,
 
         //Address

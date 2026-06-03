@@ -6,6 +6,6 @@ namespace HandMade.Application.Interfaces
 {
     public interface IAuthTokenService
     {
-        Task<string> GenerateTokenAsync(Guid userId, string userName, string email, IList<string> roles);
+        Task<string> GenerateTokenAsync(Guid userId, string userName, string email, string securityStamp, IList<string> roles);
     }
 }

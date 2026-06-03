@@ -30,13 +30,15 @@ namespace HandMade.Application.Authentication.Registration.Orchestrators
             RequestResult<CreatedUserDTO> createResult = await mediator.Send(new CreateNewUserCommand(request.userName, request.email, request.password, request.phone));
             //Check all parameters not empty
             if (!createResult.IsSuccess)
-                RequestResult<RegistrationResponseDTO>.Faild(createResult.ErrorCode);
+               return RequestResult<RegistrationResponseDTO>.Faild(createResult.ErrorCode);
             //check if the user added to the database
             if (!createResult.Data.Created)
                 return RequestResult<RegistrationResponseDTO>.Faild(ErrorCode.UserNotCreated);
 
+            Guid createdUserId = createResult.Data.UserId;
+            var createdUser = mediator.Send(new GetUserByIdQuery(createdUserId));
             //Address Creation 
-            var addAddressResult = await mediator.Send(new CreateAddressForNewUserCommand(request.label, request.detailedAddress));
+            var addAddressResult = await mediator.Send(new CreateAddressForNewUserCommand(createdUserId,request.label, request.detailedAddress));
 
             int persist = await unitOfWork.SaveChangesAsync();
             if (persist == 0)
@@ -46,7 +48,7 @@ namespace HandMade.Application.Authentication.Registration.Orchestrators
             IList<string> roles = rolesResult.Data;
 
             //Generate token
-            var token = await authTokenService.GenerateTokenAsync(createResult.Data.UserId,request.userName, request.email, roles);
+            var token = await authTokenService.GenerateTokenAsync(createResult.Data.UserId,request.userName, request.email, createdUser.Result.Data.SecurityStamp, roles);
 
             return RequestResult<RegistrationResponseDTO>.Success(new RegistrationResponseDTO { Token = token, UserId = createResult.Data.UserId });
 

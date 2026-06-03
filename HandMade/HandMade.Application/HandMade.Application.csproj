@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <Folder Include="Addresses\Queries\" />
+    <Folder Include="Authentication\Roles\Command\" />
+    <Folder Include="Authentication\Roles\DTOs\" />
   </ItemGroup>
 
 </Project>

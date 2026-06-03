@@ -9,8 +9,8 @@ namespace HandMade.Application.Authentication.Registration.Queries
 
     public class GetUserRolesQueryHandler : IRequestHandler<GetUserRolesQuery, RequestResult<IList<string>>>
     {
-        private readonly IAuthRepository _authRepository;
-        public GetUserRolesQueryHandler(IAuthRepository authRepository)
+        private readonly IAuthServices _authRepository;
+        public GetUserRolesQueryHandler(IAuthServices authRepository)
         {
             _authRepository = authRepository;
         }

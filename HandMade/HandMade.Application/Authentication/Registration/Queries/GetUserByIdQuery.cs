@@ -7,9 +7,9 @@ namespace HandMade.Application.Authentication.Registration.Queries
 {
     public record GetUserByIdQuery(Guid userId) : IRequest<RequestResult<User>>;
 
-    public class GetUserByIdHandler(IAuthRepository authRepository) : IRequestHandler<GetUserByIdQuery, RequestResult<User>>
+    public class GetUserByIdHandler(IAuthServices authRepository) : IRequestHandler<GetUserByIdQuery, RequestResult<User>>
     {
-        private readonly IAuthRepository _authRepository = authRepository;
+        private readonly IAuthServices _authRepository = authRepository;
 
         public async Task<RequestResult<User>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {

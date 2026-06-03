@@ -12,8 +12,8 @@ namespace HandMade.Application.Authentication.Registration.Queries
 
     public class FindUserByEmailQueryHandler: IRequestHandler<FindUserByEmailQuery,RequestResult<User?>>
     {
-        private readonly IAuthRepository _authRepository;
-        public FindUserByEmailQueryHandler(IAuthRepository authRepository)
+        private readonly IAuthServices _authRepository;
+        public FindUserByEmailQueryHandler(IAuthServices authRepository)
         {
             _authRepository = authRepository;
         }

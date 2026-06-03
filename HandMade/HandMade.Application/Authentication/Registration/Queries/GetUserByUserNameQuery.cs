@@ -9,8 +9,8 @@ namespace HandMade.Application.Authentication.Registration.Queries
 
     public class GetUserByUserNameQueryHandler : IRequestHandler<GetUserByUserNameQuery, RequestResult<User?>>
     {
-        private readonly IAuthRepository _authRepository;
-        public GetUserByUserNameQueryHandler(IAuthRepository authRepository)
+        private readonly IAuthServices _authRepository;
+        public GetUserByUserNameQueryHandler(IAuthServices authRepository)
         {
             _authRepository = authRepository;
         }

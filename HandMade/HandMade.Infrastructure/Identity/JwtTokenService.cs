@@ -1,4 +1,5 @@
 ﻿using HandMade.Application.Interfaces;
+using HandMade.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,7 +18,7 @@ namespace HandMade.Infrastructure.Identity
         {
             _configuration = configuration;
         }
-        public Task<string> GenerateTokenAsync(Guid userId, string userName, string email, IList<string> roles)
+        public Task<string> GenerateTokenAsync(Guid userId, string userName, string email, string securityStamp, IList<string> roles)
         {
             var authClaims = new List<Claim>
         {
@@ -25,10 +26,14 @@ namespace HandMade.Infrastructure.Identity
             new Claim(ClaimTypes.Name, userName),
             new Claim(ClaimTypes.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        };
 
+            new Claim("security_stamp", securityStamp)
+        };
+            if(roles is not null)
+            {
             foreach (var role in roles)
                 authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 

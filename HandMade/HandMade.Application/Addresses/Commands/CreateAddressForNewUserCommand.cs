@@ -9,7 +9,7 @@ using System.Text;
 
 namespace HandMade.Application.Addresses.Commands
 {
-    public record CreateAddressForNewUserCommand(string label, string detailedAddress) : IRequest<RequestResult<bool>>;
+    public record CreateAddressForNewUserCommand(Guid userId, string label, string detailedAddress) : IRequest<RequestResult<bool>>;
 
     public class CreateAddressForNewUserCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateAddressForNewUserCommand, RequestResult<bool>>
     {
@@ -25,6 +25,7 @@ namespace HandMade.Application.Addresses.Commands
 
             Address address = new Address()
             {
+                UserId= request.userId,
                 Label = request.label,
                 DetailedAddress = request.detailedAddress,
                 IsDefault = true
