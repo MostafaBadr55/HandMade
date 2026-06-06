@@ -1,7 +1,8 @@
-﻿using HandMade.Application.Authentication.Login.DTOs;
-using HandMade.Application.Authentication.Login.Queries;
-using HandMade.Application.Authentication.Registration.Orchestrators;
-using HandMade.Application.Authentication.Roles.Orchesterator;
+﻿
+using HandMade.Application.CQRS.Authentication.Login.DTOs;
+using HandMade.Application.CQRS.Authentication.Login.Queries;
+using HandMade.Application.CQRS.Authentication.Registration.Orchestrators;
+using HandMade.Application.CQRS.RolesManagement.Orchesterator;
 using HandMade.Application.Shared;
 using HandMade.Domain.DomainEnums;
 using HandMade.Helpers;
@@ -20,7 +21,7 @@ namespace HandMade.Controllers
     public class AccountController(IMediator mediator) : ControllerBase
     {
         [HttpPost("register")]
-        public async Task<ActionResult<ResponseViewModel<RegistrationResponseVM>>> Register(RegistrationRequestVM request)
+        public async Task<ActionResult<RegistrationResponseVM>> Register(RegistrationRequestVM request)
         {
             var registrationResult = await mediator.Send(new RegistrationOrchestratorRequest(
                 request.Email, request.Username, request.Password,
@@ -29,17 +30,17 @@ namespace HandMade.Controllers
             if (!registrationResult.IsSuccess)
                 return registrationResult.ErrorCode.ToProblem("Invalid user");
 
-            var response = ResponseViewModel<RegistrationResponseVM>.Success(new RegistrationResponseVM
+            var response = new RegistrationResponseVM
             {
                 Token = registrationResult.Data.Token,
                 UserId = registrationResult.Data.UserId
-            });
+            };
 
             return response;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ResponseViewModel<LoginResponseVM>>> Login(LoginRequestVM request)
+        public async Task<ActionResult<LoginResponseVM>> Login(LoginRequestVM request)
         {
             RequestResult<LoginResponseDTO> result = await mediator.Send(
                 new LoginRequestQuery(request.Username, request.password));
@@ -47,18 +48,18 @@ namespace HandMade.Controllers
             if (!result.IsSuccess)
                 return result.ErrorCode.ToProblem("Invalid username or password");
 
-            var response = ResponseViewModel<LoginResponseVM>.Success(new LoginResponseVM
+            var response = new LoginResponseVM
             {
                 Token = result.Data.Token,
                 UserId = result.Data.UserId
-            });
+            };
 
             return response;
         }
 
         [HttpPost("users/select-role")]
         [Authorize]
-        public async Task<ActionResult<ResponseViewModel<SelectRoleRequestVM>>> AssignRole(SelectRoleRequestVM request)
+        public async Task<ActionResult<SelectRoleRequestVM>> SelectUserRole(SelectRoleRequestVM request)
         {
             RequestResult<AssignedRole> result = await mediator.Send(
                 new AssignRoleToUserOrchesterator(request.Username, request.SelectedRole));
@@ -66,7 +67,7 @@ namespace HandMade.Controllers
             if (!result.IsSuccess)
                 return result.ErrorCode.ToProblem("Role not assigned");
 
-            var response = ResponseViewModel<SelectRoleResponseVM>.Success(new SelectRoleResponseVM
+            var response = PagedResponseVM<SelectRoleResponseVM>.Success(new SelectRoleResponseVM
             {
                 Role = request.SelectedRole,
                 Username = request.Username

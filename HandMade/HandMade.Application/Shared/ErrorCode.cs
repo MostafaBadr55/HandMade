@@ -16,10 +16,13 @@ namespace HandMade.Application.Shared
         InvalidEmail = 1004,
         UsernameAlreadyExists = 1005,
 
+        //Role
         NoRolesFound= 2001,
         ThisUserAlreadyHasThisRole = 2002,
         RoleAddingFaild=2003,
         FailedToUpdateSellerBool = 2004,
+        RoleAlreadyExist= 2005,
+        InvalidRoleName=2006,
 
         //Registration
         EmailAlreadyExists = 3001,
@@ -33,6 +36,16 @@ namespace HandMade.Application.Shared
         //Address
         LabelMustBeProvided = 4001,
         DetailedAddressNotProvided = 4002,
-        DefaultAddressNotAdded = 4003
+        DefaultAddressNotAdded = 4003,
+
+        // File Upload
+        NoFileProvided = 6001,
+        FileTooLarge = 6002,
+        InvalidFileExtension = 6003,
+
+        //Shop
+        ShopNotFound = 7001,
+        ShopNotPending = 7002,
+
     }
 }

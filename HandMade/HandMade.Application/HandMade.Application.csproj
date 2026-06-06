@@ -15,9 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Addresses\Queries\" />
-    <Folder Include="Authentication\Roles\Command\" />
-    <Folder Include="Authentication\Roles\DTOs\" />
+    <Folder Include="Features\Addresses\Queries\" />
+    <Folder Include="Features\Files\Queries\" />
+    <Folder Include="Features\RolesManagement\Commands\" />
+    <Folder Include="Features\Shops\DTOs\" />
+    <Folder Include="Features\Shops\Orchestrators\" />
+    <Folder Include="Features\Shops\Queries\GetShopsOwnerName\" />
   </ItemGroup>
 
 </Project>

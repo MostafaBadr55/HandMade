@@ -10,11 +10,16 @@ namespace HandMade.Helpers
         {
             return errorCode switch
             {
+                //Account ErrorCode mapping
                 ErrorCode.UserNotFound => StatusCodes.Status404NotFound,
                 ErrorCode.NoRolesFound => StatusCodes.Status404NotFound,
                 ErrorCode.EmailAlreadyExists => StatusCodes.Status409Conflict,
                 ErrorCode.UserNameAlreadyExists => StatusCodes.Status409Conflict,
                 ErrorCode.ThisUserAlreadyHasThisRole => StatusCodes.Status409Conflict,
+                //File ErrorCode mapping
+                ErrorCode.NoFileProvided => StatusCodes.Status400BadRequest,
+                ErrorCode.FileTooLarge => StatusCodes.Status400BadRequest,
+                ErrorCode.InvalidFileExtension => StatusCodes.Status415UnsupportedMediaType,
                 _ => MapByRange(errorCode)
             };
         }

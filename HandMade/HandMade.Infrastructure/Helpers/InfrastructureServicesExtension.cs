@@ -2,6 +2,7 @@
 using HandMade.Infrastructure.Data;
 using HandMade.Infrastructure.Identity;
 using HandMade.Infrastructure.Persistence;
+using HandMade.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,12 +28,15 @@ namespace HandMade.Infrastructure.Helpers
             // IUnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            // IAuthServices (uses ASP.NET Identity under the hood)
-            services.AddScoped<IAuthServices, AuthServices>();
+            // IAccountServices
+            services.AddScoped<IAccountServices, AccountServices>();
 
             // IAuthTokenService
             services.AddScoped<IAuthTokenService, JwtTokenService>();
+            services.AddScoped<IRoleServices, RolesServices>();
 
+            //LocalStorge
+            services.AddScoped<IStorageService, LocalStorageService>();
             return services;
         }
     }

@@ -1,5 +1,7 @@
 using HandMade.Application;
 using HandMade.Application.Helpers;
+using HandMade.Application.Interfaces;
+using HandMade.Helpers;
 using HandMade.Infrastructure.Data;
 using HandMade.Infrastructure.Helpers;
 using HandMade.Infrastructure.Identity.IdentityModels;
@@ -22,11 +24,7 @@ builder.Services.AddControllers()
 {
     options.JsonSerializerOptions.Converters
     .Add(new JsonStringEnumConverter());
-})
-    .ConfigureApiBehaviorOptions(options =>
-     {
-         options.SuppressModelStateInvalidFilter = true;
-     });
+});
 
 //inject Identity
 builder.Services.AddIdentity<IdentityAppUser, IdentityAppRole>(options =>
@@ -109,6 +107,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
+//UI Related Services
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUrlBuilder, HttpContextUrlBuilder>();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -188,6 +190,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 app.MapControllers();
 
