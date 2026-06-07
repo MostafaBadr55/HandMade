@@ -1,4 +1,6 @@
 ﻿using HandMade.Application.Features.Shops.Commands;
+using HandMade.Application.Features.Shops.Commands.ApproveShop;
+using HandMade.Application.Features.Shops.Commands.RejectShop;
 using HandMade.Application.Features.Shops.Queries.GetShops;
 using HandMade.Application.Features.Shops.Queries.GetShops.FilterHelpers;
 using HandMade.Domain.DomainEnums;
@@ -74,7 +76,19 @@ namespace HandMade.Controllers
             if (!result.IsSuccess)
                 return result.ErrorCode.ToProblem("Unable to approve shop.", HttpContext.Request.Path);
 
-            return NoContent();
+            return Ok(new {message = "Shop approved successfully"});
+        }
+
+        [HttpPatch("{shopId:guid}/reject")]
+        [Authorize(Roles = $"{nameof(AssignedRole.Admin)},SuperAdmin")]
+        public async Task<IActionResult> RejectShop(Guid shopId, CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(new RejectShopCommand(shopId), cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem("Unable to reject the shop", HttpContext.Request.Path);
+
+            return Ok(new {message= "Shop rejected successfully"});
         }
     }
 }

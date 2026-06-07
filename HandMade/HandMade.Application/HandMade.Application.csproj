@@ -18,9 +18,8 @@
     <Folder Include="Features\Addresses\Queries\" />
     <Folder Include="Features\Files\Queries\" />
     <Folder Include="Features\RolesManagement\Commands\" />
-    <Folder Include="Features\Shops\DTOs\" />
+    <Folder Include="Features\Shops\Commands\RejectShop\DTOs\" />
     <Folder Include="Features\Shops\Orchestrators\" />
-    <Folder Include="Features\Shops\Queries\GetShopsOwnerName\" />
   </ItemGroup>
 
 </Project>

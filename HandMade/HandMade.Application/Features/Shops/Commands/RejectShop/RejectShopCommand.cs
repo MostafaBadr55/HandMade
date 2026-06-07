@@ -8,31 +8,27 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HandMade.Application.Features.Shops.Commands
+namespace HandMade.Application.Features.Shops.Commands.RejectShop
 {
-    public record ApproveShopCommand(Guid ShopId) : IRequest<RequestResult<bool>>;
+    public record RejectShopCommand(Guid shopId) : IRequest<RequestResult<bool>>;
 
-    internal sealed class ApproveShopCommandHandler(IMediator mediator, IUnitOfWork unitOfWork)
-    : IRequestHandler<ApproveShopCommand, RequestResult<bool>>
+    internal class RejectShopCommandHandler(IMediator mediator, IUnitOfWork unitOfWork) : IRequestHandler<RejectShopCommand, RequestResult<bool>>
     {
-        public async Task<RequestResult<bool>> Handle(
-            ApproveShopCommand request,
-            CancellationToken cancellationToken)
+        public async Task<RequestResult<bool>> Handle(RejectShopCommand request, CancellationToken cancellationToken)
         {
-            
-            var statusResult = await mediator.Send(new GetShopStatusQuery(request.ShopId), cancellationToken);
+            var shopStatus = await mediator.Send(new GetShopStatusQuery(request.shopId), cancellationToken);
 
-            if (!statusResult.IsSuccess)
-                return RequestResult<bool>.Failed(statusResult.ErrorCode);
+            if (!shopStatus.IsSuccess)
+                return RequestResult<bool>.Failed(shopStatus.ErrorCode);
 
             // Check if the Shop status is pending as it is the only case to approve it.
-            if (statusResult.Data != ShopStatus.Pending)
+            if (shopStatus.Data != ShopStatus.Pending)
                 return RequestResult<bool>.Failed(ErrorCode.ShopNotPending);
 
             // Load tracked shop and update its status
             var shop = unitOfWork
                 .GetRepository<Shop>()
-                .GetById(request.ShopId)
+                .GetById(request.shopId)
                 .FirstOrDefault();
 
             shop!.Status = ShopStatus.Active;
@@ -41,6 +37,7 @@ namespace HandMade.Application.Features.Shops.Commands
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return RequestResult<bool>.Success(true);
+
         }
     }
 }

@@ -67,11 +67,11 @@ namespace HandMade.Controllers
             if (!result.IsSuccess)
                 return result.ErrorCode.ToProblem("Role not assigned");
 
-            var response = PagedResponseVM<SelectRoleResponseVM>.Success(new SelectRoleResponseVM
+            var response = new SelectRoleResponseVM
             {
                 Role = request.SelectedRole,
                 Username = request.Username
-            });
+            };
 
             return Ok(response);
         }

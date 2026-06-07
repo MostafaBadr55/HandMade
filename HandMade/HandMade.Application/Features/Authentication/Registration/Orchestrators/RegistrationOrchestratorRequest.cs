@@ -1,5 +1,5 @@
 ﻿
-using HandMade.Application.CQRS.Addresses.Commands;
+using HandMade.Application.Features.Addresses.Commands;
 using HandMade.Application.CQRS.Authentication.Registration.Commands;
 using HandMade.Application.CQRS.Authentication.Registration.DTOs;
 using HandMade.Application.CQRS.Authentication.Registration.Queries;
