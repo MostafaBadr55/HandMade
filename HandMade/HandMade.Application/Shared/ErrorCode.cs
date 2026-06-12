@@ -42,10 +42,22 @@ namespace HandMade.Application.Shared
         NoFileProvided = 6001,
         FileTooLarge = 6002,
         InvalidFileExtension = 6003,
+        FileNotFound = 6004,
 
         //Shop
         ShopNotFound = 7001,
         ShopNotPending = 7002,
+
+        //Product
+        ProductNotFound = 8001,
+        productNotPending = 8002,
+
+        //ProductImages
+        FailedToLoadProductImages = 9001,
+
+        //Category & Subcategory 
+        CategoryNotFound = 10001,
+        SubCategoryNotFound = 10002,
 
     }
 }

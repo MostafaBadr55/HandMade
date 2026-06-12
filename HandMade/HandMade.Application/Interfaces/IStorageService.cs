@@ -10,6 +10,12 @@ namespace HandMade.Application.Interfaces
         /// Persists the stream and returns a root-relative path,
         /// e.g. "uploads/shops/3f2a1b.jpg"
         /// </summary>
-        Task<string> SaveAsync(Stream fileStream,string fileName,string folder,CancellationToken ct = default);
+        Task<string> SaveFileAsync(Stream fileStream,string fileName,string folder,CancellationToken ct = default);
+        /// <summary>
+        /// Deletes the file at the given root-relative path, e.g. "uploads/shops/3f2a1b.jpg"
+        /// </summary>
+        /// <param name="relativePath"></param>
+        /// <returns></returns>
+        Task<bool> DeleteAsync(string relativePath);
     }
 }

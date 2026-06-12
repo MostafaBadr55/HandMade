@@ -2,7 +2,7 @@
 using HandMade.Application.Shared;
 using HandMade.Domain.DomainEnums;
 
-namespace HandMade.ViewModels.AdminDashboard
+namespace HandMade.ViewModels.AdminDashboard.Requests
 {
     public class GetShopsRequestVM
     {

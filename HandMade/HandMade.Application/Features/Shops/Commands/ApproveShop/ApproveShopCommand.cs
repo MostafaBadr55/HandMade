@@ -32,7 +32,7 @@ namespace HandMade.Application.Features.Shops.Commands.ApproveShop
             // Load tracked shop and update its status
             var shop = unitOfWork
                 .GetRepository<Shop>()
-                .GetById(request.ShopId)
+                .GetByIdWithTracking(request.ShopId)
                 .FirstOrDefault();
 
             shop!.Status = ShopStatus.Active;

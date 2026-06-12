@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HandMade.Application.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,5 +16,6 @@ namespace HandMade.Application.Shared
         {
             return new RequestResult<TResult>(default, false, errorCode);
         }
+
     }
 }

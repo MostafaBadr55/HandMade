@@ -11,7 +11,7 @@ using MediatR;
 
 namespace HandMade.Application.CQRS.Authentication.Registration.Orchestrators
 {
-    public record RegistrationOrchestratorRequest(string email, string userName, string password, string label,string detailedAddress, string phone = "") : IRequest<RequestResult<RegistrationResponseDTO>>;
+    public record RegistrationOrchestratorRequest(string email, string userName, string password, string label,string detailedAddress,CancellationToken ct, string phone = "") : IRequest<RequestResult<RegistrationResponseDTO>>;
 
     public class RegistrationOrchestratorHandler(IMediator mediator, IAuthTokenService authTokenService, IUnitOfWork unitOfWork) : IRequestHandler<RegistrationOrchestratorRequest, RequestResult<RegistrationResponseDTO>>
     {

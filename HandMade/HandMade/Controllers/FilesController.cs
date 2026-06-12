@@ -22,10 +22,7 @@ namespace HandMade.Controllers
 
         [HttpPost("upload")]
         [Consumes("multipart/form-data")]
-        public async Task<ActionResult<FileUploadResponseVM>> Upload(
-            [FromForm] FileUploadRequestVM request,
-            [FromQuery] UploadTarget target = UploadTarget.Product,
-            CancellationToken cancellationToken = default)
+        public async Task<ActionResult<FileUploadResponseVM>> Upload([FromForm] FileUploadRequestVM request,[FromQuery] UploadTarget target = UploadTarget.Product,CancellationToken cancellationToken = default)
         {
             var file = request.File;
 

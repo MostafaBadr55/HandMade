@@ -1,6 +1,6 @@
 ﻿using HandMade.Domain.DomainEnums;
 
-namespace HandMade.ViewModels.AdminDashboard
+namespace HandMade.ViewModels.AdminDashboard.Responses
 {
     public class DetailedShopResponseVM
     {

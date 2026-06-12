@@ -43,7 +43,7 @@ namespace HandMade.Application.Features.Files.Commands.UploadImages
             var folder = ResolveFolder(request.Target);
             var newFileName = $"{Guid.NewGuid()}{ext}";
 
-            var relativePath = await _storage.SaveAsync(
+            var relativePath = await _storage.SaveFileAsync(
                 request.FileStream,
                 newFileName,
                 folder,

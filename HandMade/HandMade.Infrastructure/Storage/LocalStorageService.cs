@@ -15,22 +15,30 @@ namespace HandMade.Infrastructure.Storage
             _webRootPath = env.WebRootPath;
         }
 
-        public async Task<string> SaveAsync(
-            Stream fileStream,
-            string fileName,
-            string folder,
+        public async Task<string> SaveFileAsync(Stream fileStream,string fileName,string folder,
             CancellationToken ct = default)
         {
-            var absoluteFolder = Path.Combine(_webRootPath, folder);
+            string absoluteFolder = Path.Combine(_webRootPath, folder);
             Directory.CreateDirectory(absoluteFolder);
 
-            var absolutePath = Path.Combine(absoluteFolder, fileName);
+            string absolutePath = Path.Combine(absoluteFolder, fileName);
 
             await using var fileOnDisk = new FileStream(absolutePath, FileMode.Create);
             await fileStream.CopyToAsync(fileOnDisk, ct);
 
             // Always return forward-slash relative path
             return $"{folder}/{fileName}";
+        }
+
+        public Task<bool> DeleteAsync(string relativePath)
+        {
+            var fullPath = Path.Combine(_webRootPath, relativePath);
+
+            if (!File.Exists(fullPath))
+                return Task.FromResult(false);
+
+            File.Delete(fullPath);
+            return Task.FromResult(true);
         }
     }
 }

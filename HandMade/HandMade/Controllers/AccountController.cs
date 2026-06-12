@@ -21,11 +21,11 @@ namespace HandMade.Controllers
     public class AccountController(IMediator mediator) : ControllerBase
     {
         [HttpPost("register")]
-        public async Task<ActionResult<RegistrationResponseVM>> Register(RegistrationRequestVM request)
+        public async Task<ActionResult<RegistrationResponseVM>> Register(RegistrationRequestVM request, CancellationToken cancellationToken)
         {
             var registrationResult = await mediator.Send(new RegistrationOrchestratorRequest(
                 request.Email, request.Username, request.Password,
-                request.AddressLable, request.Address, request.Phone));
+                request.AddressLable, request.Address, cancellationToken, request.Phone));
 
             if (!registrationResult.IsSuccess)
                 return registrationResult.ErrorCode.ToProblem("Invalid user");
@@ -40,10 +40,10 @@ namespace HandMade.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponseVM>> Login(LoginRequestVM request)
+        public async Task<ActionResult<LoginResponseVM>> Login(LoginRequestVM request, CancellationToken cancellationToken)
         {
             RequestResult<LoginResponseDTO> result = await mediator.Send(
-                new LoginRequestQuery(request.Username, request.password));
+                new LoginRequestQuery(request.Username, request.password, cancellationToken));
 
             if (!result.IsSuccess)
                 return result.ErrorCode.ToProblem("Invalid username or password");

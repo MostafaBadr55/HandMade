@@ -39,6 +39,10 @@ namespace HandMade.Application.Features.Shops.Queries.GetShops
                     // OwnerUserName left empty for now
                 })
                 .ToPagedResultAsync(_executor, request.PageNumber, request.PageSize, cancellationToken);
+            
+            //Check in case of no shops found don't continue for the username mapping.
+            if (pagedResult.Items.Count == 0)
+                return RequestResult<PagedResult<ShopDetailsForAdminDTO>>.Success(pagedResult);
 
             // Single batch lookup — one DB call for all owner IDs on this page
             var ownerIds = pagedResult.Items.Select(s => s.OwnerUserId).Distinct();

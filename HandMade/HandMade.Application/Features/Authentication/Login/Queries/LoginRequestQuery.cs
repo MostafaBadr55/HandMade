@@ -9,7 +9,7 @@ using System.Text;
 
 namespace HandMade.Application.CQRS.Authentication.Login.Queries
 {
-    public record LoginRequestQuery(string username, string password) : IRequest<RequestResult<LoginResponseDTO>>;
+    public record LoginRequestQuery(string username, string password, CancellationToken ct) : IRequest<RequestResult<LoginResponseDTO>>;
 
     public class LoginRequestQueryHandler(IAccountServices authService, IAuthTokenService tokenService) : IRequestHandler<LoginRequestQuery, RequestResult<LoginResponseDTO>>
     {

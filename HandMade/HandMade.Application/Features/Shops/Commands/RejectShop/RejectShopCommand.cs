@@ -10,7 +10,7 @@ using System.Text;
 
 namespace HandMade.Application.Features.Shops.Commands.RejectShop
 {
-    public record RejectShopCommand(Guid shopId) : IRequest<RequestResult<bool>>;
+    public record RejectShopCommand(Guid shopId, string rejectionMessage) : IRequest<RequestResult<bool>>;
 
     internal class RejectShopCommandHandler(IMediator mediator, IUnitOfWork unitOfWork) : IRequestHandler<RejectShopCommand, RequestResult<bool>>
     {
@@ -28,10 +28,11 @@ namespace HandMade.Application.Features.Shops.Commands.RejectShop
             // Load tracked shop and update its status
             var shop = unitOfWork
                 .GetRepository<Shop>()
-                .GetById(request.shopId)
+                .GetByIdWithTracking(request.shopId)
                 .FirstOrDefault();
 
             shop!.Status = ShopStatus.Active;
+            shop.RejectionMessage = request.rejectionMessage;
             shop!.UpdatedAt = DateTime.UtcNow;
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
