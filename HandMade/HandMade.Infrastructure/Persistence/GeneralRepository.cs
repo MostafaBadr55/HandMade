@@ -69,6 +69,11 @@ namespace HandMade.Infrastructure.Persistence
 
         }
 
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+             _dbSet.RemoveRange(entities);
+        }
+
         public void Update(T entity)
         {
             _dbSet.Update(entity);

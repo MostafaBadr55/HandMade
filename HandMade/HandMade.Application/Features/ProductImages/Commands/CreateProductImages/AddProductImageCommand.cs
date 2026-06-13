@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HandMade.Application.Features.ProductImages.Commands
+namespace HandMade.Application.Features.ProductImages.Commands.CreateProductImages
 {
     public record CreateProductImagesCommand(Guid ProductId,List<CreateProductImageDto> Images) : IRequest<RequestResult<bool>>;
 

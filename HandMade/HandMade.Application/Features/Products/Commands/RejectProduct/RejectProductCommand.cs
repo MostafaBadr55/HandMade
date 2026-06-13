@@ -8,13 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HandMade.Application.Features.Products.Commands
+namespace HandMade.Application.Features.Products.Commands.RejectProduct
 {
-    public record ApproveProductCommand(Guid productId) : IRequest<RequestResult<bool>>;
+    public record RejectProductCommand(Guid productId, string rejectionMessage) : IRequest<RequestResult<bool>>;
 
-    internal class ApproveProductCommandHandler(IUnitOfWork _unitOfWork, IMediator mediator) : IRequestHandler<ApproveProductCommand, RequestResult<bool>>
+    public class RejectProductCommandHandler(IUnitOfWork _unitOfWork, IMediator mediator ) : IRequestHandler<RejectProductCommand, RequestResult<bool>>
     {
-        public async Task<RequestResult<bool>> Handle(ApproveProductCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult<bool>> Handle(RejectProductCommand request, CancellationToken cancellationToken)
         {
             //product status is pending
             var requestApprovalStatus = await mediator.Send(new GetProductStatusQuery(request.productId));
@@ -24,12 +24,13 @@ namespace HandMade.Application.Features.Products.Commands
             if (requestApprovalStatus.Data != ProductApprovalStatus.Pending)
                 return RequestResult<bool>.Failed(ErrorCode.productNotPending);
 
-            //Get tracked product and change status into approved.
+            //Get tracked product and change status into rejected.
             var product = _unitOfWork.GetRepository<Product>()
                                       .GetByIdWithTracking(request.productId)
                                       .FirstOrDefault();
 
-            product.ApprovalStatus = ProductApprovalStatus.Approved;
+            product.ApprovalStatus = ProductApprovalStatus.Rejected;
+            product.RejectionMessage = request.rejectionMessage;
             product.UpdatedAt = DateTime.Now;
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -37,5 +38,6 @@ namespace HandMade.Application.Features.Products.Commands
             return RequestResult<bool>.Success(true);
         }
     }
+
 
 }

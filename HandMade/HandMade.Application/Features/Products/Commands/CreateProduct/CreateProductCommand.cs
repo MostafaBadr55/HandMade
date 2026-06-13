@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HandMade.Application.Features.Products.Commands
+namespace HandMade.Application.Features.Products.Commands.CreateProduct
 {
     public record CreateProductCommand(Guid ShopId,Guid CategoryId,Guid SubCategoryId,string Title,decimal Price) : IRequest<RequestResult<Guid>>;
 

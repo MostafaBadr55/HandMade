@@ -51,6 +51,8 @@ namespace HandMade.Application.Shared
         //Product
         ProductNotFound = 8001,
         productNotPending = 8002,
+        ProductDoesNotBelongToThisShop = 8003,
+        ProductNotApproved = 8004,
 
         //ProductImages
         FailedToLoadProductImages = 9001,

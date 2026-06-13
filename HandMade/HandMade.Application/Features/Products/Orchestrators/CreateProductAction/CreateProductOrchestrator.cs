@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HandMade.Application.Features.Products.Orchestrators
+namespace HandMade.Application.Features.Products.Orchestrators.CreateProductAction
 {
     public record CreateProductOrchestratorCommand(Guid UserId,Guid ShopId,Guid CategoryId,Guid SubCategoryId,string Title,decimal Price,List<CreateProductImageDto> Images) : IRequest<RequestResult<Guid>>;
 

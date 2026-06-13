@@ -19,6 +19,7 @@ namespace HandMade.Application.Interfaces
         public void Update(T entity);
         public bool? SoftDeleteById(Guid id);
         public void AddRange(IEnumerable<T> entities);
+        public void DeleteRange(IEnumerable<T> entities);
 
         public Task<int> SaveChanges();
     }
