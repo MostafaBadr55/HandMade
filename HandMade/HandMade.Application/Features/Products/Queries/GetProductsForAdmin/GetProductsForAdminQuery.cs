@@ -19,7 +19,7 @@ namespace HandMade.Application.Features.Products.Queries.GetProductsForAdmin
     {
         public async Task<RequestResult<PagedResult<ProductDetailsDTO>>> Handle(GetProductsForAdminQuery request, CancellationToken cancellationToken)
         {
-            ProductQuerySpecification spec = new ProductQuerySpecification(request.criteria);
+            ProductsForAdminQuerySpecification spec = new ProductsForAdminQuerySpecification(request.criteria);
 
             PagedResult<ProductDetailsDTO> products = await unitOfWork.GetRepository<Product>()
                                            .GetAll()

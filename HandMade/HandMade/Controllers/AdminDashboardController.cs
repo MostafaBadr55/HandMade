@@ -1,4 +1,10 @@
-﻿using HandMade.Application.Features.Products.Commands;
+﻿using HandMade.Application.Features.Categories.Commands.CreateCategory;
+using HandMade.Application.Features.Categories.Commands.DeleteCategory;
+using HandMade.Application.Features.Categories.Commands.UpdateCategory;
+using HandMade.Application.Features.Categories.Queries.GetCategoryManagementDashboard;
+using HandMade.Application.Features.Products.Commands;
+using HandMade.Application.Features.Products.Commands.ApproveProduct;
+using HandMade.Application.Features.Products.Commands.RejectProduct;
 using HandMade.Application.Features.Products.Queries.GetProductsForAdmin;
 using HandMade.Application.Features.Products.Queries.GetProductsForAdmin.DTOs;
 using HandMade.Application.Features.Shops.Commands;
@@ -6,11 +12,14 @@ using HandMade.Application.Features.Shops.Commands.ApproveShop;
 using HandMade.Application.Features.Shops.Commands.RejectShop;
 using HandMade.Application.Features.Shops.Queries.GetShops;
 using HandMade.Application.Features.Shops.Queries.GetShops.FilterHelpers;
+using HandMade.Application.Features.SubCategories.Commands;
 using HandMade.Domain.DomainEnums;
 using HandMade.Helpers;
 using HandMade.ViewModels;
 using HandMade.ViewModels.AdminDashboard.Requests;
 using HandMade.ViewModels.AdminDashboard.Responses;
+using HandMade.ViewModels.Category;
+using HandMade.ViewModels.SubCategory;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,10 +29,10 @@ namespace HandMade.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = $"{nameof(AssignedRole.Admin)},SuperAdmin")]
     public class AdminDashboardController(IMediator mediator) : ControllerBase
     {
         [HttpGet("shops")]
-        [Authorize(Roles = $"{nameof(AssignedRole.Admin)},SuperAdmin")]
         public async Task<ActionResult<PagedResponseVM<DetailedShopResponseVM>>> GetShops(
             [FromQuery] GetShopsRequestVM request,
             CancellationToken cancellationToken)
@@ -72,7 +81,6 @@ namespace HandMade.Controllers
         }
 
         [HttpPatch("shops/{shopId:guid}/approve")]
-        [Authorize(Roles = $"{nameof(AssignedRole.Admin)},SuperAdmin")]
         public async Task<ActionResult> ApproveShop(Guid shopId, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(new ApproveShopCommand(shopId), cancellationToken);
@@ -84,7 +92,6 @@ namespace HandMade.Controllers
         }
 
         [HttpPatch("shops/{shopId:guid}/reject")]
-        [Authorize(Roles = $"{nameof(AssignedRole.Admin)},SuperAdmin")]
         public async Task<ActionResult> RejectShop(RejectShopRequestVM request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(new RejectShopCommand(request.ShopId, request.RejectionMessage), cancellationToken);
@@ -148,6 +155,111 @@ namespace HandMade.Controllers
 
             return Ok(new { message = "Product is rejected Successfully" });
         }
+
+        [HttpGet("categories")]
+        public async Task<ActionResult<PagedResponseVM<CategoryResponseVM>>> GetCategories([FromQuery] GetAllCategoriesRequestVM request,CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                new GetCategoryManagementDashboardQuery(request.SearchTerm, request.PageNumber, request.PageSize),
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem("Failed to retrieve categories.", HttpContext.Request.Path);
+
+            var response = result.Data!.ToPagedResponseVM(c => new CategoryResponseVM
+            {
+                Id = c.Id,
+                Name = c.CategoryName,
+                Description = c.CategoryDescription,
+                ImageUrl = c.CategoryImage,
+                CreatedAt = c.CreatedAt,
+                SubCategories = c.Subcategories.Select(sc => new SubCategoryResponseVM
+                {
+                    Id = sc.Id,
+                    Name = sc.SubcategoryName,
+                    CreatedAt = sc.CreatedAt
+                }).ToList()
+            });
+
+            return Ok(response);
+        }
+
+        [HttpPost("categories")]
+        public async Task<ActionResult> CreateCategory([FromBody] CreateCategoryRequestVM request,
+        CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                new CreateCategoryCommand(request.Name, request.Description, request.ImageUrl),
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem("Failed to create category.", HttpContext.Request.Path);
+
+            return CreatedAtAction(nameof(GetCategories), new { }, result.Data);
+        }
+
+        [HttpPut("categories/{id:guid}")]
+        public async Task<ActionResult> UpdateCategory(Guid id,[FromBody] UpdateCategoryRequestVM request,CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(new UpdateCategoryCommand(id, request.Name, request.Description, request.ImageUrl),cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem("Failed to update category.", HttpContext.Request.Path);
+
+            return NoContent();
+        }
+
+        [HttpDelete("categories/{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id,CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(new DeleteCategoryCommand(id),cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem("Failed to delete category.", HttpContext.Request.Path);
+
+            return NoContent();
+        }
+
+        [HttpPost("subcategories")]
+        public async Task<ActionResult> CreateSubCategory([FromBody] CreateSubCategoryRequestVM request,
+        CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                new CreateSubcategoryCommand(request.CategoryId, request.Name),
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem("Failed to create sub-category.", HttpContext.Request.Path);
+
+            return Created($"SubCategory with name: {request.Name} have been created successfully", result.Data);
+        }
+
+        [HttpPut("subcategories/{id:guid}")]
+        public async Task<ActionResult> Update(Guid id,[FromBody] UpdateSubCategoryRequestVM request,CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                new UpdateSubcategoryCommand(id, request.CategoryId, request.Name),
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem("Failed to update sub-category.", HttpContext.Request.Path);
+
+            return NoContent();
+        }
+
+        [HttpDelete("subcategories/{id:guid}")]
+        public async Task<IActionResult> DeleteSubCategory(Guid id,CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                new DeleteSubCategoryCommand(id),
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem("Failed to delete sub-category.", HttpContext.Request.Path);
+
+            return NoContent();
+        }
+
     }
 }
         

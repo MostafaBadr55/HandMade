@@ -24,7 +24,7 @@ namespace HandMade.Application.Features.Shops.Queries.ValidateShopOwnership
                 .Any(s => s.Id == request.ShopId && s.OwnerUserId == request.UserId);
 
             if (!exists)
-                return RequestResult<bool>.Failed(ErrorCode.ShopNotFound);
+                return RequestResult<bool>.Success(false);
 
             return RequestResult<bool>.Success(true);
         }

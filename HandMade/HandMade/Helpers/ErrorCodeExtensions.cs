@@ -20,6 +20,11 @@ namespace HandMade.Helpers
                 ErrorCode.NoFileProvided => StatusCodes.Status400BadRequest,
                 ErrorCode.FileTooLarge => StatusCodes.Status400BadRequest,
                 ErrorCode.InvalidFileExtension => StatusCodes.Status415UnsupportedMediaType,
+                //Product ErrorCode mapping
+                ErrorCode.ProductAccessDenied => StatusCodes.Status403Forbidden,
+                //Shop ErrorCode mapping
+                ErrorCode.ThisOwnerAlreadyHasAShop => StatusCodes.Status403Forbidden,
+
                 _ => MapByRange(errorCode)
             };
         }

@@ -3,7 +3,11 @@ using HandMade.Application.Features.Products.Commands.UpdateProductPrice;
 using HandMade.Application.Features.Products.Commands.UpdateProductStatus;
 using HandMade.Application.Features.Products.Orchestrators;
 using HandMade.Application.Features.Products.Orchestrators.CreateProductAction;
+using HandMade.Application.Features.Products.Orchestrators.DeleteProductAction;
 using HandMade.Application.Features.Products.Orchestrators.UpdateProductMainInfoAction;
+using HandMade.Application.Features.Products.Queries.GetProductsForSellerDashboard;
+using HandMade.Application.Features.Products.Queries.GetProductsForSellerDashboard.DTOs;
+using HandMade.Application.Shared;
 using HandMade.Domain.DomainEnums;
 using HandMade.Helpers;
 using HandMade.ViewModels.Products;
@@ -18,11 +22,32 @@ namespace HandMade.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = nameof(AssignedRole.Artist))]
     public class SellerProductManagementController(IMediator _mediator) : ControllerBase
     {
+        [HttpGet]
+        public async Task<ActionResult> GetProductsManagementDashboard(ProductsForSellerCriteria criteria, Guid shopId, int pageNumber, int pageSize, CancellationToken ct)
+        {
+            var requestingUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var products = await _mediator.Send(new GetProductsForSellerDashboardQuery(criteria, requestingUserId, shopId, pageNumber, pageSize, ct));
+
+            if (!products.IsSuccess)
+                return products.ErrorCode.ToProblem("Gailed to Get products");
+
+            var response = products.Data.ToPagedResponseVM(product => new ProductForSellerDTO() 
+            { Id = product.Id,
+              Title = product.Title,
+              Status = product.Status,
+              IsPublished = product.IsPublished,
+              Price = product.Price,
+              Images = product.Images
+            });
+
+            return Ok(response);
+        }
+
         [HttpPost]
-        [Authorize(Roles = nameof(AssignedRole.Artist))]
-        public async Task<ActionResult<Guid>> CreateProduct([FromBody] CreateProductRequestVM request,CancellationToken cancellationToken)
+        public async Task<ActionResult> CreateProduct([FromBody] CreateProductRequestVM request,CancellationToken cancellationToken)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
@@ -38,7 +63,7 @@ namespace HandMade.Controllers
             if (!result.IsSuccess)
                 return result.ErrorCode.ToProblem("Product creation failed.", HttpContext.Request.Path);
 
-            return CreatedAtAction(nameof(CreateProduct), new { id = result.Data }, result.Data);
+            return Created(string.Empty,new {message= "Product Created Successfully", id = result.Data});
         }
 
         [HttpPut("{productId:guid}")]
@@ -74,11 +99,7 @@ namespace HandMade.Controllers
         }
 
         [HttpPatch("{productId:guid}/status")]
-        public async Task<IActionResult> UpdateStatus(
-            Guid shopId,
-            Guid productId,
-            [FromBody] UpdateProductStatusRequestVM request,
-            CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateStatus(Guid shopId,Guid productId,[FromBody] UpdateProductStatusRequestVM request,CancellationToken cancellationToken)
         {
             var sellerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
@@ -89,6 +110,28 @@ namespace HandMade.Controllers
             if (!result.IsSuccess)
                 return result.ErrorCode.ToProblem(
                     "Failed to update product status.", HttpContext.Request.Path);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{productId:guid}")]
+        public async Task<IActionResult> DeleteProduct(Guid productId,CancellationToken cancellationToken)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var result = await _mediator.Send(
+                new DeleteProductOrchestrator(productId, userId),
+                cancellationToken);
+
+            if (!result.IsSuccess)
+                return result.ErrorCode.ToProblem(
+                    result.ErrorCode switch
+                    {
+                        ErrorCode.ProductNotFound => "No product with the given ID was found.",
+                        ErrorCode.ProductAccessDenied => "You do not have permission to delete this product.",
+                        _ => "An error occurred while deleting the product."
+                    },
+                    HttpContext.Request.Path);
 
             return NoContent();
         }

@@ -8,9 +8,9 @@ using System.Text;
 
 namespace HandMade.Application.Features.Products.Queries.FilterHelpers
 {
-    public class ProductQuerySpecification: BaseSpecification<Product>
+    public class ProductsForAdminQuerySpecification: BaseSpecification<Product>
     {
-        public ProductQuerySpecification(ProductQueryCriteria criteria)
+        public ProductsForAdminQuerySpecification(ProductQueryCriteria criteria)
         {
             Criteria = p =>
                 (!criteria.ShopId.HasValue || p.ShopId == criteria.ShopId.Value) &&

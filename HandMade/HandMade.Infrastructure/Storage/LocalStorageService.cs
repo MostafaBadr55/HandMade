@@ -30,7 +30,7 @@ namespace HandMade.Infrastructure.Storage
             return $"{folder}/{fileName}";
         }
 
-        public Task<bool> DeleteAsync(string relativePath)
+        public Task<bool> DeleteAsync(string relativePath, CancellationToken ct = default)
         {
             var fullPath = Path.Combine(_webRootPath, relativePath);
 

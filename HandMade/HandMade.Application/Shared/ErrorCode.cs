@@ -47,19 +47,22 @@ namespace HandMade.Application.Shared
         //Shop
         ShopNotFound = 7001,
         ShopNotPending = 7002,
+        ThisOwnerAlreadyHasAShop = 7003,
+        UserDoesNotOwnThisShop = 7004,
 
         //Product
         ProductNotFound = 8001,
         productNotPending = 8002,
         ProductDoesNotBelongToThisShop = 8003,
         ProductNotApproved = 8004,
-
+        ProductAccessDenied = 8005,
         //ProductImages
         FailedToLoadProductImages = 9001,
 
         //Category & Subcategory 
         CategoryNotFound = 10001,
         SubCategoryNotFound = 10002,
-
+        CategoryNameAlreadyExists = 10003,
+        SubCategoryNameAlreadyExistsInCategory = 10004,
     }
 }

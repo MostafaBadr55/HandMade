@@ -1,8 +1,10 @@
 ﻿using HandMade.Application.Features.Categories.Queries.ValidateCategoryExists;
 using HandMade.Application.Features.Files.Commands.DeleteFile;
 using HandMade.Application.Features.ProductImages.Commands;
+using HandMade.Application.Features.ProductImages.Commands.CreateProductImages;
 using HandMade.Application.Features.ProductImages.Commands.CreateProductImages.DTOs;
 using HandMade.Application.Features.Products.Commands;
+using HandMade.Application.Features.Products.Commands.CreateProduct;
 using HandMade.Application.Features.Shops.Queries.ValidateShopOwnership;
 using HandMade.Application.Features.SubCategories.Queries;
 using HandMade.Application.Shared;

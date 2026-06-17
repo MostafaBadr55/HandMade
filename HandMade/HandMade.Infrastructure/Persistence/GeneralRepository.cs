@@ -29,6 +29,11 @@ namespace HandMade.Infrastructure.Persistence
             return _dbSet.Where(x => !x.IsDeleted);
         }
 
+        public IQueryable<T> GetRangeWithTracking(Expression<Func<T,bool>> expression)
+        {
+            return Get(expression).AsTracking();
+        }
+
         public IQueryable<T> GetById(Guid id)
         {
             return _dbSet.Where(x => x.Id == id && !x.IsDeleted);
@@ -38,6 +43,11 @@ namespace HandMade.Infrastructure.Persistence
         {
             return _dbSet.Where(x => x.Id == id && !x.IsDeleted)
                 .AsTracking();
+        }
+
+        public Task<bool> AnyAsync(Expression<Func<T,bool>> expression, CancellationToken ct)
+        {
+            return _dbSet.AnyAsync(expression,ct);
         }
 
         public void Add(T entity)
@@ -54,24 +64,15 @@ namespace HandMade.Infrastructure.Persistence
             }
         }
 
-
-        public bool? SoftDeleteById(Guid id)
-        {
-            T? entity = GetByIdWithTracking(id).FirstOrDefault();
-            if (entity is null)
-                return null;
-
-            entity.IsDeleted = true;
-            entity.DeletedAt = DateTime.UtcNow;
-
-            return true;
-
-
-        }
-
         public void DeleteRange(IEnumerable<T> entities)
         {
              _dbSet.RemoveRange(entities);
+        }
+        public void SoftDelete(T entity)
+        {
+            entity.IsDeleted = true;
+            entity.DeletedAt = DateTime.UtcNow;
+            _dbSet.Update(entity);
         }
 
         public void Update(T entity)

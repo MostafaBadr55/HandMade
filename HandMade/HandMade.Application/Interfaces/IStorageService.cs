@@ -16,6 +16,6 @@ namespace HandMade.Application.Interfaces
         /// </summary>
         /// <param name="relativePath"></param>
         /// <returns></returns>
-        Task<bool> DeleteAsync(string relativePath);
+        Task<bool> DeleteAsync(string relativePath, CancellationToken ct = default);
     }
 }
