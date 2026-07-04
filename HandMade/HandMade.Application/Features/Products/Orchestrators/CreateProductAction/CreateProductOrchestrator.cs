@@ -15,7 +15,7 @@ using System.Text;
 
 namespace HandMade.Application.Features.Products.Orchestrators.CreateProductAction
 {
-    public record CreateProductOrchestratorCommand(Guid UserId,Guid ShopId,Guid CategoryId,Guid SubCategoryId,string Title,decimal Price,List<CreateProductImageDto> Images) : IRequest<RequestResult<Guid>>;
+    public record CreateProductOrchestratorCommand(Guid UserId,Guid ShopId,Guid CategoryId,Guid SubCategoryId,string Title, string description, decimal Price,List<CreateProductImageDto> Images) : IRequest<RequestResult<Guid>>;
 
     public class CreateProductOrchestratorCommandHandler
     : IRequestHandler<CreateProductOrchestratorCommand, RequestResult<Guid>>
@@ -54,7 +54,7 @@ namespace HandMade.Application.Features.Products.Orchestrators.CreateProductActi
 
                 // Step 4 — create the product
                 var productResult = await _mediator.Send(
-                new CreateProductCommand(request.ShopId,request.CategoryId,request.SubCategoryId,request.Title,request.Price),cancellationToken);
+                new CreateProductCommand(request.ShopId,request.CategoryId,request.SubCategoryId,request.Title, request.description,request.Price),cancellationToken);
 
             if (!productResult.IsSuccess)
                 return RequestResult<Guid>.Failed(productResult.ErrorCode);

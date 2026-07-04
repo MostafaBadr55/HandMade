@@ -20,7 +20,7 @@ namespace HandMade.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = nameof(AssignedRole.Artist))]
-    public class ShopController(IMediator _mediator) : ControllerBase
+    public class ShopManagementController(IMediator _mediator) : ControllerBase
     {
         [HttpGet("myShop")]
         public async Task<ActionResult> GetMyShop(CancellationToken cancellationToken)
@@ -60,7 +60,6 @@ namespace HandMade.Controllers
 
         }
 
-        //update Shop info
         [HttpPut]
         public async Task<ActionResult> UpdateShopInfo(UpdateShopInfoRequest request, CancellationToken ct)
         {
@@ -72,8 +71,8 @@ namespace HandMade.Controllers
 
             return NoContent();
         }
-        //update Shop Activity status
 
+        [HttpPatch("activity")]
         public async Task<ActionResult> UpdateShopActivityStatus(UpdateShopActivityStatusRequestVM request, CancellationToken ct)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

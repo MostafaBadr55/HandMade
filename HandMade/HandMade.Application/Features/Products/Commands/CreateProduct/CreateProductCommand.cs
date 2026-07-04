@@ -8,7 +8,7 @@ using System.Text;
 
 namespace HandMade.Application.Features.Products.Commands.CreateProduct
 {
-    public record CreateProductCommand(Guid ShopId,Guid CategoryId,Guid SubCategoryId,string Title,decimal Price) : IRequest<RequestResult<Guid>>;
+    public record CreateProductCommand(Guid ShopId,Guid CategoryId,Guid SubCategoryId,string Title,string description, decimal Price) : IRequest<RequestResult<Guid>>;
 
 
     public class CreateProductCommandHandler(IUnitOfWork _unitOfWork)
@@ -22,6 +22,7 @@ namespace HandMade.Application.Features.Products.Commands.CreateProduct
                 CategoryId = request.CategoryId,
                 SubCategoryId = request.SubCategoryId,
                 Title = request.Title,
+                Description = request.description,
                 Price = request.Price,
                 IsPublished = false,
             };

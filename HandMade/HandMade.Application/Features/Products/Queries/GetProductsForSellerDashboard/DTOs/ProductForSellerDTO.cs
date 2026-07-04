@@ -11,6 +11,7 @@ namespace HandMade.Application.Features.Products.Queries.GetProductsForSellerDas
         public Guid Id { get; set; }
         public bool IsPublished { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
         public decimal Price { get; set; }
         public ProductStatus Status { get; set; }
         public List<ProductImageDictionaryItemDTO> Images { get; set; } = new();

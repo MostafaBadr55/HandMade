@@ -33,6 +33,7 @@ namespace HandMade.Application.Features.Products.Queries.GetProductsForSellerDas
                                    {
                                       Id = p.Id,
                                       Title = p.Title,
+                                      Description = p.Description,
                                       Status = p.Status,
                                       IsPublished = p.IsPublished,
                                       Price = p.Price,

@@ -29,6 +29,7 @@ namespace HandMade.Application.Features.Products.Queries.GetProductsForAdmin
                                                Id = p.Id,
                                                ShopName = p.Shop.Name,
                                                Title = p.Title,
+                                               Description = p.Description,
                                                Price = p.Price,
                                                Status = p.Status,
                                                IsPublished = p.IsPublished

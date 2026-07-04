@@ -13,6 +13,7 @@ namespace HandMade.Domain.Entities
         [Required]
         [MaxLength(160)]
         public string Title { get; set; }
+        public string Description { get; set; }
 
         [Required]
         [MaxLength(80)]
@@ -29,7 +30,7 @@ namespace HandMade.Domain.Entities
 
         [Timestamp]
         public byte[]? RowVersion { get; set; }
-
+        public int ExpectedDays { get; set; } = 1;
         public Guid ShopId { get; set; }
         public Guid CategoryId { get; set; }
         public Guid SubCategoryId { get; set; }

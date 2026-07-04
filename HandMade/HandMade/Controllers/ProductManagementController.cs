@@ -23,7 +23,7 @@ namespace HandMade.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = nameof(AssignedRole.Artist))]
-    public class SellerProductManagementController(IMediator _mediator) : ControllerBase
+    public class ProductManagementController(IMediator _mediator) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult> GetProductsManagementDashboard(ProductsForSellerCriteria criteria, Guid shopId, int pageNumber, int pageSize, CancellationToken ct)
@@ -32,7 +32,7 @@ namespace HandMade.Controllers
             var products = await _mediator.Send(new GetProductsForSellerDashboardQuery(criteria, requestingUserId, shopId, pageNumber, pageSize, ct));
 
             if (!products.IsSuccess)
-                return products.ErrorCode.ToProblem("Gailed to Get products");
+                return products.ErrorCode.ToProblem("Failed to Get products");
 
             var response = products.Data.ToPagedResponseVM(product => new ProductForSellerDTO() 
             { Id = product.Id,
@@ -52,7 +52,7 @@ namespace HandMade.Controllers
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var result = await _mediator.Send(
-                new CreateProductOrchestratorCommand(userId,request.ShopId,request.CategoryId,request.SubCategoryId,request.Title,request.Price,
+                new CreateProductOrchestratorCommand(userId,request.ShopId,request.CategoryId,request.SubCategoryId,request.Title, request.description, request.Price,
                     request.Images.Select(i => new CreateProductImageDto(
                         i.RelativePath,
                         i.AltText,

@@ -37,6 +37,9 @@ namespace HandMade.Infrastructure.Helpers
 
             //LocalStorge
             services.AddScoped<IStorageService, LocalStorageService>();
+
+            //QueryableExecutor
+            services.AddScoped<IQueryableExecutor, EfQueryableExecutor>();
             return services;
         }
     }

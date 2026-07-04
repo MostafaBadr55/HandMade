@@ -17,7 +17,8 @@
 
   <ItemGroup>
     <Folder Include="Features\Addresses\Queries\" />
-    <Folder Include="Features\Files\Queries\" />
+    <Folder Include="Features\FilesManagement\Queries\" />
+    <Folder Include="Features\Reviews\Commands\" />
     <Folder Include="Features\RolesManagement\Commands\" />
     <Folder Include="Features\Shops\Commands\RejectShop\DTOs\" />
     <Folder Include="Features\Shops\Orchestrators\" />

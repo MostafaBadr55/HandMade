@@ -37,6 +37,7 @@ namespace HandMade.Domain.Entities
 
         // Negotiation Logic
         public int? ExecutionDays { get; set; }
+        public string? SpecialInstructions { get; set; }
         public DateTime? ConfirmedAt { get; set; }
         public string? CancellationReason { get; set; }
         public Guid? CancelledByUserId { get; set; }
