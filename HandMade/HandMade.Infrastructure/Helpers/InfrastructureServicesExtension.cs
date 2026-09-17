@@ -1,4 +1,5 @@
 ﻿using HandMade.Application.Interfaces;
+using HandMade.Infrastructure.BackgroundServices;
 using HandMade.Infrastructure.Data;
 using HandMade.Infrastructure.Identity;
 using HandMade.Infrastructure.Orders;
@@ -42,6 +43,7 @@ namespace HandMade.Infrastructure.Helpers
 
             //QueryableExecutor
             services.AddScoped<IQueryableExecutor, EfQueryableExecutor>();
+
             //Order numbering
             services.AddScoped<IOrderNumberGenerator, OrderNumberGenerator>();
 
@@ -52,6 +54,8 @@ namespace HandMade.Infrastructure.Helpers
             //Escrow policy — AutoReleaseDays, read from configuration.
             services.AddScoped<IEscrowPolicy, EscrowPolicy>();
 
+            //Escrow sweep — releases held funds when a client never confirms delivery.
+            services.AddHostedService<EscrowAutoReleaseService>();
             return services;
         }
     }
