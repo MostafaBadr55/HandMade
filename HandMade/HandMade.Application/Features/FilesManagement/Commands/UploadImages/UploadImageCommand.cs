@@ -59,6 +59,8 @@ namespace HandMade.Application.Features.Files.Commands.UploadImages
         {
             UploadTarget.Shop => "uploads/shops",
             UploadTarget.Product => "uploads/products",
+            UploadTarget.OrderAttachment => "uploads/orders",
+            UploadTarget.Category => "uploads/categories",
             _ => "uploads/general"
         };
     }

@@ -6,7 +6,6 @@ namespace HandMade.Domain.Entities
     public class Order : BaseModel
     {
 
-        public Guid? CartItemId { get; set; }
         public Guid UserId { get; set; }
 
         public Guid ShopId { get; set; }
@@ -43,6 +42,13 @@ namespace HandMade.Domain.Entities
         public Guid? CancelledByUserId { get; set; }
         public DateTime? CancelledAt { get; set; }
 
+        /// <summary>
+        /// Set when the artist marks the work complete. If the client never
+        /// confirms delivery, the escrow sweep auto-confirms once this passes,
+        /// so the artist's money is never stranded by an unresponsive buyer.
+        /// </summary>
+        public DateTime? AutoReleaseAt { get; set; }
+
         // Calculated Helper
         public DateTime? ExpectedDeliveryDate => ConfirmedAt?.AddDays(ExecutionDays ?? 1);
 
@@ -51,6 +57,7 @@ namespace HandMade.Domain.Entities
 
         public ICollection<Payment> Payments { get; set; }
         //public ICollection<OrderItem> OrderItems { get; set; }
+        public ICollection<OrderAttachment> OrderAttachments { get; set; }
         public ICollection<Shipment> Shipments { get; set; }
         public ICollection<Refund> Refunds { get; set; }
         public ICollection<Dispute> Disputes { get; set; }

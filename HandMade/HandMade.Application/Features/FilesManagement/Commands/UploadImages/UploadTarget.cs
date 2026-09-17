@@ -7,6 +7,8 @@ namespace HandMade.Application.Features.Files.Commands.UploadImages
     public enum UploadTarget
     {
         Shop,
-        Product
+        Product,
+        OrderAttachment,
+        Category
     }
 }

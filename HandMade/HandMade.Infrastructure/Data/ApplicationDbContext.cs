@@ -20,6 +20,7 @@ namespace HandMade.Infrastructure.Data
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<OrderAttachment> OrderAttachments { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Address> Addresses { get; set; }
@@ -268,6 +269,17 @@ namespace HandMade.Infrastructure.Data
                 entity.Property(o => o.ShippingFee).HasPrecision(18, 2);
                 entity.Property(o => o.TaxTotal).HasPrecision(18, 2);
                 entity.Property(o => o.GrandTotal).HasPrecision(18, 2);
+            });
+
+            // ──────────────────────────────────────────────
+            // OrderAttachment
+            // ──────────────────────────────────────────────
+            modelBuilder.Entity<OrderAttachment>(entity =>
+            {
+                entity.HasOne(oa => oa.Order)
+                      .WithMany(o => o.OrderAttachments)
+                      .HasForeignKey(oa => oa.OrderId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // ──────────────────────────────────────────────

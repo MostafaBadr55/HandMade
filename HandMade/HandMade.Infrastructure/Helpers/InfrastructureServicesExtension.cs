@@ -1,6 +1,7 @@
 ﻿using HandMade.Application.Interfaces;
 using HandMade.Infrastructure.Data;
 using HandMade.Infrastructure.Identity;
+using HandMade.Infrastructure.Orders;
 using HandMade.Infrastructure.Payments;
 using HandMade.Infrastructure.Persistence;
 using HandMade.Infrastructure.Storage;
@@ -41,6 +42,9 @@ namespace HandMade.Infrastructure.Helpers
 
             //QueryableExecutor
             services.AddScoped<IQueryableExecutor, EfQueryableExecutor>();
+            //Order numbering
+            services.AddScoped<IOrderNumberGenerator, OrderNumberGenerator>();
+
             //Payment gateway — swap FakePaymentGateway for a real provider by
             //registering it here; nothing in the order flow needs to change.
             services.AddScoped<IPaymentGateway, FakePaymentGateway>();

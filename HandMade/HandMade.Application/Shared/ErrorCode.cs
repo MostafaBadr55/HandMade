@@ -74,6 +74,14 @@ namespace HandMade.Application.Shared
         InvalidQuantity = 11005,
         CartItemAlreadyConverted = 11006,
 
+        //Order
+        OrderNotFound = 12001,
+        OrderAccessDenied = 12002,
+        InvalidOrderStatusTransition = 12003,
+        ShippingAddressRequired = 12004,
+        OrderCannotBeCancelled = 12005,
+        OrderConcurrencyConflict = 12006,
+
         //Payment & Escrow
         PaymentNotFound = 13001,
         PaymentFailed = 13002,
