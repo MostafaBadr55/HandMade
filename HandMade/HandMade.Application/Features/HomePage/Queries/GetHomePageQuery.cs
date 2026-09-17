@@ -34,25 +34,36 @@ namespace HandMade.Application.Features.HomePage.Queries
                 SortDirection = SortDirection.Desc
             };
 
-            var categoriesTask = mediator.Send(
+            // Sequential, not Task.WhenAll: all three sub-queries resolve the same
+            // scoped DbContext, and EF Core forbids concurrent operations on one
+            // context instance. Running them in parallel throws
+            // "A second operation was started on this context instance".
+            var categories = await mediator.Send(
                 new GetCategoryCardsQuery(),
                 cancellationToken);
 
-            var shopsTask = mediator.Send(
+            if (!categories.IsSuccess)
+                return RequestResult<HomePageDTO>.Failed(categories.ErrorCode);
+
+            var shops = await mediator.Send(
                 new GetPublicShopsCardsQuery(shopCriteria, pageNumber: 1, pageSize: 6),
                 cancellationToken);
 
-            var productsTask = mediator.Send(
+            if (!shops.IsSuccess)
+                return RequestResult<HomePageDTO>.Failed(shops.ErrorCode);
+
+            var recentProducts = await mediator.Send(
                 new GetPublicProductsQuery(productCriteria, pageNumber: 1, pageSize: 4),
                 cancellationToken);
 
-            await Task.WhenAll(categoriesTask, shopsTask, productsTask);
+            if (!recentProducts.IsSuccess)
+                return RequestResult<HomePageDTO>.Failed(recentProducts.ErrorCode);
 
             return RequestResult<HomePageDTO>.Success(new HomePageDTO
             {
-                Categories = categoriesTask.Result.Data!.Items,
-                TopRatedShops = shopsTask.Result.Data!.Items,
-                MostRecentProducts = productsTask.Result.Data!.Items
+                Categories = categories.Data!.Items,
+                TopRatedShops = shops.Data!.Items,
+                MostRecentProducts = recentProducts.Data!.Items
             });
         }
     }
