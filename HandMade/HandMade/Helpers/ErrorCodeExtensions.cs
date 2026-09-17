@@ -42,6 +42,11 @@ namespace HandMade.Helpers
                 ErrorCode.PaymentNotFound => StatusCodes.Status404NotFound,
                 ErrorCode.PaymentAlreadyCompleted => StatusCodes.Status409Conflict,
 
+                //Review ErrorCode mapping
+                ErrorCode.ReviewNotFound => StatusCodes.Status404NotFound,
+                ErrorCode.AlreadyReviewed => StatusCodes.Status409Conflict,
+                ErrorCode.NotEligibleToReview => StatusCodes.Status403Forbidden,
+
                 _ => MapByRange(errorCode)
             };
         }

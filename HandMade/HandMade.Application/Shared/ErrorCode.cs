@@ -66,6 +66,7 @@ namespace HandMade.Application.Shared
         SubCategoryNotFound = 10002,
         CategoryNameAlreadyExists = 10003,
         SubCategoryNameAlreadyExistsInCategory = 10004,
+
         //Cart
         CartNotFound = 11001,
         CartItemNotFound = 11002,
@@ -89,5 +90,10 @@ namespace HandMade.Application.Shared
         EscrowNotHeld = 13004,
         EscrowAlreadyReleased = 13005,
 
+        //Review
+        ReviewNotFound = 14001,
+        AlreadyReviewed = 14002,
+        NotEligibleToReview = 14003,
+        InvalidRating = 14004,
     }
 }
