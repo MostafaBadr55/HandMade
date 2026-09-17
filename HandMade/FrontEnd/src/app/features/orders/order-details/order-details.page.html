@@ -1,0 +1,115 @@
+<div class="order-details-page">
+  <div *ngIf="loading()" class="loading"><div class="spinner"></div></div>
+
+  <ng-container *ngIf="!loading() && order() as o">
+    <div class="page-header">
+      <h1>#{{ o.orderNumber }}</h1>
+      <span class="status-badge" [class]="o.status.toLowerCase()">{{ o.status }}</span>
+    </div>
+
+    <div class="details-grid">
+      <div class="card main-info">
+        <div class="product-row">
+          <img [src]="resolveImage(o.productImageUrl)" [alt]="o.productTitle">
+          <div>
+            <h2>{{ o.productTitle }}</h2>
+            <p>{{ o.shopName }}</p>
+            <p>{{ lang() === 'ar' ? 'الكمية' : 'Quantity' }}: {{ o.quantity }}</p>
+          </div>
+        </div>
+
+        <div class="price-breakdown">
+          <div><span>{{ lang() === 'ar' ? 'سعر الوحدة' : 'Unit Price' }}</span><span>{{ o.unitPrice | currency:'EGP ' }}</span></div>
+          <div><span>{{ lang() === 'ar' ? 'المجموع الفرعي' : 'Subtotal' }}</span><span>{{ o.subtotal | currency:'EGP ' }}</span></div>
+          <div><span>{{ lang() === 'ar' ? 'الشحن' : 'Shipping' }}</span><span>{{ o.shippingFee | currency:'EGP ' }}</span></div>
+          <div class="total"><span>{{ lang() === 'ar' ? 'الإجمالي' : 'Total' }}</span><span>{{ o.grandTotal | currency:'EGP ' }}</span></div>
+        </div>
+
+        <div class="info-row" *ngIf="o.specialInstructions">
+          <strong>{{ lang() === 'ar' ? 'تعليمات خاصة' : 'Special Instructions' }}</strong>
+          <p>{{ o.specialInstructions }}</p>
+        </div>
+
+        <div class="info-row" *ngIf="o.shippingAddressLabel">
+          <strong>{{ lang() === 'ar' ? 'عنوان الشحن' : 'Shipping Address' }}</strong>
+          <p>{{ o.shippingAddressLabel }} — {{ o.shippingAddressDetails }}</p>
+        </div>
+
+        <div class="info-row" *ngIf="o.attachmentUrls.length">
+          <strong>{{ lang() === 'ar' ? 'صور مرجعية' : 'Reference Images' }}</strong>
+          <div class="attachments">
+            <img *ngFor="let url of o.attachmentUrls" [src]="resolveImage(url)" alt="">
+          </div>
+        </div>
+      </div>
+
+      <div class="card side-info">
+        <div class="timeline-item" *ngIf="o.executionDays">
+          <span class="material-symbols-outlined">schedule</span>
+          <span>{{ lang() === 'ar' ? 'مدة التنفيذ' : 'Execution' }}: {{ o.executionDays }} {{ lang() === 'ar' ? 'يوم' : 'days' }}</span>
+        </div>
+        <div class="timeline-item" *ngIf="o.expectedDeliveryDate">
+          <span class="material-symbols-outlined">event</span>
+          <span>{{ lang() === 'ar' ? 'موعد التسليم المتوقع' : 'Expected Delivery' }}: {{ o.expectedDeliveryDate | date:'mediumDate' }}</span>
+        </div>
+        <div class="timeline-item" *ngIf="o.paymentStatus">
+          <span class="material-symbols-outlined">credit_card</span>
+          <span>{{ lang() === 'ar' ? 'حالة الدفع' : 'Payment' }}: {{ o.paymentStatus }}</span>
+        </div>
+        <div class="timeline-item" *ngIf="o.escrowStatus">
+          <span class="material-symbols-outlined">lock</span>
+          <span>{{ lang() === 'ar' ? 'حالة الضمان' : 'Escrow' }}: {{ o.escrowStatus }}</span>
+        </div>
+        <div class="timeline-item" *ngIf="o.cancellationReason">
+          <span class="material-symbols-outlined">cancel</span>
+          <span>{{ o.cancellationReason }}</span>
+        </div>
+
+        <div class="actions">
+          <ng-container *ngIf="o.status === 'BuyerPending'">
+            <button class="btn-success" (click)="acceptQuote()" [disabled]="acting()">
+              {{ lang() === 'ar' ? 'قبول والدفع' : 'Accept & Pay' }}
+            </button>
+            <button class="btn-danger" (click)="rejectQuote()" [disabled]="acting()">
+              {{ lang() === 'ar' ? 'رفض' : 'Reject' }}
+            </button>
+          </ng-container>
+
+          <button class="btn-outline" *ngIf="o.status === 'SellerPending'" (click)="cancelOrder()" [disabled]="acting()">
+            {{ lang() === 'ar' ? 'إلغاء الطلب' : 'Cancel Order' }}
+          </button>
+
+          <button class="btn-confirm" *ngIf="o.status === 'CompletedBySeller'" (click)="confirmDelivery()" [disabled]="acting()">
+            {{ lang() === 'ar' ? 'تأكيد الاستلام' : 'Confirm Delivery' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review -->
+    <div class="card review-section" *ngIf="canReview()">
+      <h2>{{ lang() === 'ar' ? 'اكتب تقييمًا' : 'Write a Review' }}</h2>
+      <button class="btn-secondary" *ngIf="!showReviewForm()" (click)="showReviewForm.set(true)">
+        {{ lang() === 'ar' ? 'تقييم هذا المنتج' : 'Review this product' }}
+      </button>
+      <div class="review-form" *ngIf="showReviewForm()">
+        <label>{{ lang() === 'ar' ? 'التقييم' : 'Rating' }}</label>
+        <select [ngModel]="reviewRating()" (ngModelChange)="reviewRating.set(+$event)">
+          <option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }} ★</option>
+        </select>
+        <label>{{ lang() === 'ar' ? 'العنوان' : 'Title' }}</label>
+        <input type="text" [ngModel]="reviewTitle()" (ngModelChange)="reviewTitle.set($event)">
+        <label>{{ lang() === 'ar' ? 'التعليق' : 'Comment' }}</label>
+        <textarea rows="3" [ngModel]="reviewContent()" (ngModelChange)="reviewContent.set($event)"></textarea>
+        <button class="btn-primary" (click)="submitReview()" [disabled]="submittingReview()">
+          {{ lang() === 'ar' ? 'إرسال' : 'Submit' }}
+        </button>
+      </div>
+    </div>
+
+    <a routerLink="/orders" class="back-link">
+      <span class="material-symbols-outlined">arrow_back</span>
+      {{ lang() === 'ar' ? 'العودة إلى الطلبات' : 'Back to orders' }}
+    </a>
+  </ng-container>
+</div>

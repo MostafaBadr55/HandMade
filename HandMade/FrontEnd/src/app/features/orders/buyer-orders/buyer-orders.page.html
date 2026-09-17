@@ -1,0 +1,136 @@
+<div class="orders-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>{{ lang() === 'ar' ? 'طلباتي' : 'My Orders' }}</h1>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button [class.active]="activeTab() === 'pending'" (click)="setTab('pending')">
+                {{ lang() === 'ar' ? 'يحتاج موافقة' : 'Action Required' }}
+            </button>
+            <button [class.active]="activeTab() === 'active'" (click)="setTab('active')">
+                {{ lang() === 'ar' ? 'الطلبات الحالية' : 'Active Orders' }}
+            </button>
+            <button [class.active]="activeTab() === 'history'" (click)="setTab('history')">
+                {{ lang() === 'ar' ? 'السجل' : 'History' }}
+            </button>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-state" *ngIf="loading()">
+            <div class="spinner"></div>
+            <p>{{ lang() === 'ar' ? 'جاري التحميل...' : 'Loading...' }}</p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loading() && orders().length === 0" class="empty-state">
+            <span class="material-symbols-outlined">shopping_bag</span>
+            <p>{{ lang() === 'ar' ? 'لا توجد طلبات هنا' : 'No orders found' }}</p>
+        </div>
+
+        <!-- Orders List -->
+        <div class="orders-list" *ngIf="!loading() && orders().length > 0">
+            <div class="order-card" *ngFor="let order of orders()">
+                <div class="order-header">
+                    <a class="order-number" [routerLink]="['/orders', order.orderId]">#{{ order.orderNumber }}</a>
+                    <span class="order-date">{{ order.createdAt | date:'mediumDate' }}</span>
+                    <span class="status-badge" [class]="order.status.toLowerCase()">
+                        {{ getStatusLabel(order.status) }}
+                    </span>
+                </div>
+
+                <div class="order-body">
+                    <img class="item-image" [src]="resolveImage(order.productImageUrl)" [alt]="order.productTitle">
+                    <div class="order-items">
+                        <div class="item-name">{{ order.productTitle }}</div>
+                        <div class="item-shop">{{ order.shopName }}</div>
+                        <div class="item-qty">x{{ order.quantity }}</div>
+                    </div>
+                    <div class="order-total">
+                        <span>{{ lang() === 'ar' ? 'الإجمالي' : 'Total' }}</span>
+                        <span class="amount">{{ order.grandTotal | currency:'EGP':'symbol':'1.0-2' }}</span>
+                    </div>
+                </div>
+
+                <!-- Order Actions based on Status -->
+                <div class="order-actions">
+
+                    <!-- BuyerPending: Accept & Pay, or Reject -->
+                    <div *ngIf="order.status === 'BuyerPending'" class="action-group">
+                        <div class="proposal-info">
+                            <span class="material-symbols-outlined">schedule</span>
+                            <p>
+                                {{ lang() === 'ar'
+                                ? 'عرض السعر: ' + (order.grandTotal | currency:'EGP':'symbol':'1.0-2') + '، التنفيذ خلال ' + order.executionDays + ' يوم.'
+                                : 'Quoted at ' + (order.grandTotal | currency:'EGP':'symbol':'1.0-2') + ', delivery in ' + order.executionDays + ' days.' }}
+                            </p>
+                        </div>
+                        <div class="buttons">
+                            <button class="btn-success" (click)="acceptQuote(order)" [disabled]="acceptingId() === order.orderId">
+                                {{ lang() === 'ar' ? 'قبول والدفع' : 'Accept & Pay' }}
+                            </button>
+                            <button class="btn-danger" (click)="openRejectModal(order)">
+                                {{ lang() === 'ar' ? 'رفض' : 'Reject' }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- InProgress: Just View -->
+                    <div *ngIf="order.status === 'InProgress'" class="action-group">
+                        <div class="info-message">
+                            {{ lang() === 'ar' ? 'الحرفي يعمل على طلبك حالياً.' : 'The artist is working on your order.' }}
+                        </div>
+                    </div>
+
+                    <!-- CompletedBySeller: Confirm Delivery -->
+                    <div *ngIf="order.status === 'CompletedBySeller'" class="action-group">
+                        <div class="info-message success">
+                            {{ lang() === 'ar' ? 'الطلب جاهز للتسليم!' : 'Order is ready for delivery!' }}
+                        </div>
+                        <div class="buttons">
+                            <button class="btn-confirm" (click)="confirmDelivery(order)" [disabled]="confirmingId() === order.orderId">
+                                {{ lang() === 'ar' ? 'تأكيد الاستلام' : 'Confirm Delivery' }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SellerPending: Waiting -->
+                    <div *ngIf="order.status === 'SellerPending'" class="action-group">
+                        <div class="info-message">
+                            {{ lang() === 'ar' ? 'بانتظار عرض سعر من الحرفي...' : 'Waiting for a quote from the artist...' }}
+                        </div>
+                        <button class="btn-outline" (click)="openCancelModal(order)">
+                            {{ lang() === 'ar' ? 'إلغاء الطلب' : 'Cancel Order' }}
+                        </button>
+                    </div>
+
+                    <a class="view-details-link" [routerLink]="['/orders', order.orderId]">
+                        {{ lang() === 'ar' ? 'عرض التفاصيل' : 'View details' }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Cancel/Reject Modal -->
+    <div class="modal-overlay" *ngIf="showCancelModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>{{ cancelMode() === 'reject' ? (lang() === 'ar' ? 'رفض العرض' : 'Reject Quote') : (lang() === 'ar' ? 'إلغاء الطلب' : 'Cancel Order') }}</h3>
+                <button class="close-btn" (click)="closeCancelModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label>{{ lang() === 'ar' ? 'السبب (اختياري)' : 'Reason (optional)' }}</label>
+                <textarea [ngModel]="cancelReason()" (ngModelChange)="cancelReason.set($event)" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" (click)="closeCancelModal()">{{ lang() === 'ar' ? 'تراجع' : 'Back' }}</button>
+                <button class="btn-danger" (click)="submitCancel()" [disabled]="cancelling()">
+                    {{ lang() === 'ar' ? 'تأكيد' : 'Confirm' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
