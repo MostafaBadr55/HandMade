@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="card">
+    <h2>{{ lang() === 'ar' ? 'الأدمن — المنتجات المعلقة' : 'Admin — Pending Products' }}</h2>
+    <p>{{ lang() === 'ar' ? 'القائمة التالية تحتوي على المنتجات التي في انتظار الموافقة.' : 'Below are products awaiting
+      approval.' }}</p>
+
+    <div *ngIf="loading()" class="loading">
+      <div class="spinner"></div>
+      {{ lang() === 'ar' ? 'جاري التحميل...' : 'Loading...' }}
+    </div>
+
+    <div *ngIf="!loading() && products().length === 0">
+      <p>{{ lang() === 'ar' ? 'لا توجد منتجات معلقة.' : 'No pending products.' }}</p>
+    </div>
+
+    <div *ngIf="!loading() && products().length > 0" class="products-grid">
+      <app-product-card *ngFor="let p of products()" [product]="p" mode="admin" (approve)="approve($event)"
+        (reject)="reject($event)">
+      </app-product-card>
+    </div>
+
+    <p><a routerLink="/admin">{{ lang() === 'ar' ? 'العودة للوحة الأدمن' : 'Back to Admin' }}</a></p>
+  </div>
+</div>
