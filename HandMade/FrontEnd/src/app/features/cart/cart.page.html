@@ -1,0 +1,99 @@
+<div class="cart-page">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'cart.title' | t }}</h1>
+      <p class="page-subtitle" *ngIf="!isEmpty()">{{ totalItems() }} {{ 'cart.items' | t }}</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="loading-state">
+      <div class="spinner"></div>
+      <p>{{ lang() === 'ar' ? 'جاري التحميل...' : 'Loading...' }}</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error() && !loading()" class="error-state">
+      <span class="material-symbols-outlined">error</span>
+      <p>{{ error() }}</p>
+      <button class="btn btn--primary" (click)="loadCart()">{{ 'common.retry' | t }}</button>
+    </div>
+
+    <!-- Empty Cart -->
+    <div *ngIf="!loading() && !error() && isEmpty()" class="empty-state">
+      <span class="material-symbols-outlined empty-icon">shopping_cart</span>
+      <h2>{{ 'cart.empty' | t }}</h2>
+      <p>{{ 'cart.emptyMessage' | t }}</p>
+      <a routerLink="/" class="btn btn--primary">{{ 'cart.continueShopping' | t }}</a>
+    </div>
+
+    <!-- Cart Content -->
+    <div *ngIf="!loading() && !error() && !isEmpty()" class="cart-content">
+      <div class="cart-items">
+        <div *ngFor="let item of items()" class="cart-item" [class.updating]="updating() === item.cartItemId">
+          <div class="item-image">
+            <img [src]="resolveImage(item.imageUrl)" [alt]="item.productName">
+          </div>
+
+          <div class="item-details">
+            <h3 class="item-name">{{ item.productName }}</h3>
+            <p class="item-shop">{{ item.shopName }}</p>
+            <p class="item-price">{{ item.unitPrice | currency:'EGP':'symbol':'1.0-2' }}</p>
+            <p class="item-warning" *ngIf="!item.isStillPurchasable">
+              {{ lang() === 'ar' ? 'هذا المنتج لم يعد متاحًا للشراء' : 'This product is no longer purchasable' }}
+            </p>
+          </div>
+
+          <div class="item-quantity">
+            <button class="qty-btn" (click)="decrementQuantity(item)" [disabled]="updating() === item.cartItemId">
+              <span class="material-symbols-outlined">{{ item.quantity <= 1 ? 'delete' : 'remove' }}</span>
+            </button>
+            <span class="qty-value">{{ item.quantity }}</span>
+            <button class="qty-btn" (click)="incrementQuantity(item)" [disabled]="updating() === item.cartItemId">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </div>
+
+          <div class="item-subtotal">
+            <span class="subtotal-label">{{ 'cart.subtotal' | t }}</span>
+            <span class="subtotal-value">{{ item.totalPrice | currency:'EGP':'symbol':'1.0-2' }}</span>
+          </div>
+
+          <button class="remove-btn" (click)="removeItem(item.cartItemId)" [disabled]="updating() === item.cartItemId" [title]="'cart.remove' | t">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="cart-summary">
+        <div class="summary-card">
+          <h2 class="summary-title">{{ 'cart.orderSummary' | t }}</h2>
+
+          <div class="summary-row">
+            <span>{{ 'cart.items' | t }} ({{ totalItems() }})</span>
+            <span>{{ totalPrice() | currency:'EGP':'symbol':'1.0-2' }}</span>
+          </div>
+
+          <div class="summary-row summary-row--total">
+            <span>{{ 'cart.total' | t }}</span>
+            <span class="total-price">{{ totalPrice() | currency:'EGP':'symbol':'1.0-2' }}</span>
+          </div>
+
+          <button class="btn btn--primary btn--block checkout-btn" (click)="goToCheckout()">
+            <span class="material-symbols-outlined">shopping_cart_checkout</span>
+            {{ 'cart.checkout' | t }}
+          </button>
+
+          <button class="btn btn--outline btn--block clear-btn" (click)="clearCart()">
+            <span class="material-symbols-outlined">delete_sweep</span>
+            {{ 'cart.clearCart' | t }}
+          </button>
+
+          <a routerLink="/" class="continue-link">
+            <span class="material-symbols-outlined">arrow_back</span>
+            {{ 'cart.continueShopping' | t }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="checkout-page">
+  <h1>{{ lang() === 'ar' ? 'إتمام الطلب' : 'Checkout' }}</h1>
+
+  <div *ngIf="loading()" class="loading"><div class="spinner"></div></div>
+
+  <div class="checkout-grid" *ngIf="!loading() && cart() as c">
+    <div class="items card">
+      <h2>{{ lang() === 'ar' ? 'المنتجات' : 'Items' }}</h2>
+      <div class="line-item" *ngFor="let item of c.items">
+        <img [src]="resolveImage(item.imageUrl)" [alt]="item.productName">
+        <div class="line-item-info">
+          <strong>{{ item.productName }}</strong>
+          <span>{{ item.shopName }}</span>
+          <span>{{ item.quantity }} × {{ item.unitPrice | currency:'EGP ' }}</span>
+        </div>
+        <div class="line-item-total">{{ item.totalPrice | currency:'EGP ' }}</div>
+      </div>
+      <div class="grand-total">
+        <span>{{ lang() === 'ar' ? 'الإجمالي' : 'Total' }}</span>
+        <strong>{{ c.subtotal | currency:'EGP ' }}</strong>
+      </div>
+      <p class="note">{{ lang() === 'ar' ? 'سيقوم كل حرفي بتقديم عرض سعر منفصل قبل تأكيد الدفع.' : 'Each artist will submit a separate quote before payment is confirmed.' }}</p>
+    </div>
+
+    <div class="details card">
+      <h2>{{ lang() === 'ar' ? 'الشحن' : 'Shipping' }}</h2>
+
+      <div *ngIf="error()" class="alert">{{ error() }}</div>
+
+      <label>{{ lang() === 'ar' ? 'عنوان الشحن' : 'Shipping Address' }}</label>
+      <select [ngModel]="selectedAddressId()" (ngModelChange)="selectedAddressId.set($event)">
+        <option value="">{{ lang() === 'ar' ? 'اختر عنوانًا' : 'Select an address' }}</option>
+        <option *ngFor="let a of addresses()" [value]="a.id">{{ a.label }} — {{ a.detailedAddress }}</option>
+      </select>
+      <a routerLink="/addresses" class="add-address-link">{{ lang() === 'ar' ? '+ إضافة عنوان جديد' : '+ Add a new address' }}</a>
+
+      <label>{{ lang() === 'ar' ? 'تعليمات خاصة' : 'Special Instructions' }}</label>
+      <textarea rows="3" [ngModel]="specialInstructions()" (ngModelChange)="specialInstructions.set($event)"></textarea>
+
+      <button class="btn-primary" (click)="placeOrder()" [disabled]="submitting() || !c.items.length">
+        {{ submitting() ? (lang() === 'ar' ? 'جارِ الإرسال...' : 'Placing order...') : (lang() === 'ar' ? 'إرسال الطلب' : 'Place Order') }}
+      </button>
+    </div>
+  </div>
+</div>

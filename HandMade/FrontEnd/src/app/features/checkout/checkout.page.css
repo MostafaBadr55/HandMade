@@ -1,0 +1,16 @@
+.checkout-page { max-width: 1000px; margin: 0 auto; padding: 24px 16px 64px; }
+.loading { text-align: center; padding: 60px; }
+.checkout-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
+@media (max-width: 800px) { .checkout-grid { grid-template-columns: 1fr; } }
+.card { border: 1px solid #eee; border-radius: 12px; padding: 18px; background: #fafafa; }
+.line-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eee; }
+.line-item img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; }
+.line-item-info { display: flex; flex-direction: column; flex: 1; font-size: .9rem; }
+.line-item-total { font-weight: 600; }
+.grand-total { display: flex; justify-content: space-between; padding-top: 14px; font-size: 1.1rem; }
+.note { color: #777; font-size: .85rem; margin-top: 10px; }
+.details label { display: block; margin-top: 12px; font-weight: 600; font-size: .9rem; }
+.details select, .details textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px; margin-top: 4px; box-sizing: border-box; }
+.add-address-link { display: inline-block; margin-top: 6px; font-size: .85rem; }
+.btn-primary { margin-top: 18px; width: 100%; background: #222; color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
+.alert { background: #fdecea; color: #c0392b; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; }
