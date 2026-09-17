@@ -29,6 +29,10 @@ namespace HandMade.Helpers
                 ErrorCode.AddressNotFound => StatusCodes.Status404NotFound,
                 ErrorCode.AddressNotOwnedByUser => StatusCodes.Status403Forbidden,
 
+                //Cart ErrorCode mapping
+                ErrorCode.CartNotFound => StatusCodes.Status404NotFound,
+                ErrorCode.CartItemNotFound => StatusCodes.Status404NotFound,
+
                 _ => MapByRange(errorCode)
             };
         }
@@ -41,6 +45,7 @@ namespace HandMade.Helpers
             if (code is >= 3001 and <= 3999) return StatusCodes.Status409Conflict;
             if (code is >= 4001 and <= 4999) return StatusCodes.Status400BadRequest;
             if (code is >= 5001 and <= 5999) return StatusCodes.Status401Unauthorized;
+            if (code is >= 11001 and <= 14999) return StatusCodes.Status400BadRequest;
             return StatusCodes.Status400BadRequest;
         }
 

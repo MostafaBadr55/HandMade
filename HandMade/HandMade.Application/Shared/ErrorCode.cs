@@ -66,5 +66,13 @@ namespace HandMade.Application.Shared
         SubCategoryNotFound = 10002,
         CategoryNameAlreadyExists = 10003,
         SubCategoryNameAlreadyExistsInCategory = 10004,
+        //Cart
+        CartNotFound = 11001,
+        CartItemNotFound = 11002,
+        CartIsEmpty = 11003,
+        ProductNotPurchasable = 11004,
+        InvalidQuantity = 11005,
+        CartItemAlreadyConverted = 11006,
+
     }
 }

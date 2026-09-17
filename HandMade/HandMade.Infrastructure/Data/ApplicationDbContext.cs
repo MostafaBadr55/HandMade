@@ -215,7 +215,20 @@ namespace HandMade.Infrastructure.Data
                       .HasForeignKey(ci => ci.ProductId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasIndex(ci => new { ci.CartId, ci.ProductId }).IsUnique();
+                // The order this cart item became at checkout. Null until converted;
+                // IsConvertedToOrder is its companion flag. Restrict: never let an
+                // order delete drag its originating cart item away.
+                entity.HasOne<Order>()
+                      .WithMany()
+                      .HasForeignKey(ci => ci.OrderId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Uniqueness applies to LIVE lines only. Removed (soft-deleted) and
+                // converted lines are kept as history, and must not stop the client
+                // ordering the same product again later.
+                entity.HasIndex(ci => new { ci.CartId, ci.ProductId })
+                      .IsUnique()
+                      .HasFilter("[IsDeleted] = 0 AND [IsConvertedToOrder] = 0");
 
                 entity.Property(ci => ci.UnitPrice).HasPrecision(18, 2);
                 entity.Property(ci => ci.TotalPrice).HasPrecision(18, 2);
