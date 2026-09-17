@@ -1,4 +1,5 @@
 ﻿using HandMade.Application.Features.Files.Commands.UploadImages;
+using HandMade.Domain.DomainEnums;
 using HandMade.Helpers;
 using HandMade.ViewModels.UploadFiles;
 using MediatR;
@@ -10,7 +11,7 @@ namespace HandMade.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Seller")]
+    [Authorize(Roles = $"{nameof(AssignedRole.Artist)},{nameof(AssignedRole.Client)},{nameof(AssignedRole.Admin)}")]
     public class FilesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -35,7 +36,7 @@ namespace HandMade.Controllers
             var result = await _mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
-                return result.ErrorCode.ToProblem(HttpContext.Request.Path);
+                return result.ErrorCode.ToProblem("Faild to upload the file", HttpContext.Request.Path);
 
             var response = new FileUploadResponseVM { AbsoluteUrl = result.Data.AbsoluteUrl, RelativePath = result.Data.RelativePath };
             return response;

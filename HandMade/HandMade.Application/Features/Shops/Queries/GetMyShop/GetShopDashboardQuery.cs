@@ -44,7 +44,7 @@ namespace HandMade.Application.Features.Shops.Queries.GetShopDashboard
                     cancellationToken))).Data;
 
             PagedResult<ProductForSellerDTO>? inactiveProducts = (await _mediator.Send(new GetProductsForSellerDashboardQuery(
-                    new ProductsForSellerCriteria { Status = ProductStatus.Active }, request.userId, shop.Id,
+                    new ProductsForSellerCriteria { Status = ProductStatus.InActive }, request.userId, shop.Id,
                     pageNumber: 1, pageSize: 10,
                     cancellationToken))).Data;
             

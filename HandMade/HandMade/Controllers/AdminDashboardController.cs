@@ -210,7 +210,7 @@ namespace HandMade.Controllers
         }
 
         [HttpDelete("categories/{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id,CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteCategory(Guid id,CancellationToken cancellationToken)
         {
             var result = await mediator.Send(new DeleteCategoryCommand(id),cancellationToken);
 
@@ -235,7 +235,7 @@ namespace HandMade.Controllers
         }
 
         [HttpPut("subcategories/{id:guid}")]
-        public async Task<ActionResult> Update(Guid id,[FromBody] UpdateSubCategoryRequestVM request,CancellationToken cancellationToken)
+        public async Task<ActionResult> UpdateSubCategory(Guid id,[FromBody] UpdateSubCategoryRequestVM request,CancellationToken cancellationToken)
         {
             var result = await mediator.Send(
                 new UpdateSubcategoryCommand(id, request.CategoryId, request.Name),

@@ -26,7 +26,7 @@ namespace HandMade.Controllers
     public class ProductManagementController(IMediator _mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult> GetProductsManagementDashboard(ProductsForSellerCriteria criteria, Guid shopId, int pageNumber, int pageSize, CancellationToken ct)
+        public async Task<ActionResult> GetProductsManagementDashboard([FromQuery] ProductsForSellerCriteria criteria, [FromQuery] Guid shopId, [FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken ct)
         {
             var requestingUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var products = await _mediator.Send(new GetProductsForSellerDashboardQuery(criteria, requestingUserId, shopId, pageNumber, pageSize, ct));
