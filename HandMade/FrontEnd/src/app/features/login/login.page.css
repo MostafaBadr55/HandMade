@@ -1,0 +1,208 @@
+.auth-page {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: #f0f0f0; /* Slightly darker gray for better contrast with sharp card */
+  width: 100vw;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 100%;
+  padding: 3rem; /* More padding */
+  background: #ffffff;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-title {
+  margin: 0 0 0.5rem;
+  font-size: 2rem; /* Smaller title */
+  font-weight: 700;
+  color: #111;
+  letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+  width: 100%;
+  max-width: 360px; /* Narrower form */
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #111;
+}
+
+.forgot-link {
+  font-size: 0.8rem;
+  color: #767676;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  color: #111;
+}
+
+.input {
+  width: 100%;
+  padding: 0 12px;
+  border-radius: 0;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #111;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  height: 42px; /* Smaller inputs */
+}
+
+.input:focus {
+  outline: none;
+  border-color: #111;
+  border-width: 1px;
+  padding: 0 11px;
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.btn--block {
+  width: 100%;
+  padding-block: 12px; /* Smaller button */
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0;
+  letter-spacing: 0.5px;
+}
+
+.btn--primary {
+  background: #111;
+  color: #ffffff;
+  border: 1px solid transparent;
+  transition: background 0.2s;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: #000;
+}
+
+.btn--primary:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #111;
+  padding: 1.25rem;
+  border: 1px solid #eee;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 0;
+}
+
+.auth-footer a {
+  color: var(--accent); /* make Join link match register's Login green */
+  text-decoration: underline;
+  margin-left: 0.25rem;
+}
+
+.auth-footer a:hover {
+  color: #111;
+}
+
+.form-error {
+  color: #e06363;
+  font-size: 0.9rem;
+  margin-top: 0.45rem;
+}
+
+.input--invalid {
+  border-color: #e06363;
+}
+
+.alert {
+  background: #fff3f2;
+  color: #7a1f1f;
+  padding: 1rem;
+  border-radius: 0;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(211, 47, 47, 0.12);
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Layout - Compact & Comfortable */
+.login-layout {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 900px; /* Smaller width */
+  height: 550px; /* Smaller height */
+  background: #fff;
+  border-radius: 0;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08); /* Softer shadow */
+  overflow: hidden;
+}
+
+.login-image {
+  display: none;
+  flex: 0 0 45%; /* Image takes 45% */
+  background-color: #f5f5f5;
+  position: relative;
+}
+
+.login-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.auth-card {
+  flex: 1;
+  max-width: 100%;
+  padding: 2.5rem; /* Reduced padding */
+  overflow-y: auto;
+}
+
+@media (min-width: 900px) {
+  .login-image {
+    display: block;
+  }
+}
+

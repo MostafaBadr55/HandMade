@@ -1,0 +1,33 @@
+<div class="auth-page">
+  <div class="card auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">{{ 'role.chooseRole' | t }}</h1>
+      <p class="auth-subtitle">{{ 'role.selectBuyerOrSeller' | t }}</p>
+    </div>
+
+    <div *ngIf="serverError()" class="alert">{{ serverError() }}</div>
+    <div *ngIf="successMessage()" class="alert alert--success">{{ successMessage() }}</div>
+
+    <div class="roles">
+      <button class="role-card" (click)="selectClient()" [disabled]="loading()">
+        <div class="role-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        </div>
+        <h3>{{ 'role.buyer' | t }}</h3>
+        <p>{{ 'role.buyerDesc' | t }}</p>
+      </button>
+
+      <button class="role-card" (click)="selectArtist()" [disabled]="loading()">
+        <div class="role-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M5 10a17 17 0 0 0 14 0"/></svg>
+        </div>
+        <h3>{{ 'role.seller' | t }}</h3>
+        <p>{{ 'role.sellerDesc' | t }}</p>
+      </button>
+    </div>
+
+    <div class="form-actions">
+      <a routerLink="/" class="btn btn--secondary">{{ 'role.skipForNow' | t }}</a>
+    </div>
+  </div>
+</div>

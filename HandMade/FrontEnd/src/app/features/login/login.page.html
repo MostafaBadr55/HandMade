@@ -1,0 +1,48 @@
+<div class="auth-page">
+  <div class="login-layout">
+    <div class="login-image">
+      <img src="https://images.pexels.com/photos/3440657/pexels-photo-3440657.jpeg" alt="Login visual">
+    </div>
+
+    <div class="card auth-card">
+      <div class="auth-header">
+        <h1 class="auth-title">{{ 'app.name' | t }} - {{ 'auth.login' | t }}</h1>
+        <p class="auth-subtitle">{{ 'auth.welcomeBack' | t }}</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div *ngIf="serverError()" class="alert">
+        {{ serverError() }}
+      </div>
+      <div class="form-group">
+        <label for="userName">{{ 'auth.email' | t }}</label>
+        <input type="text" id="userName" class="input" formControlName="userName" [class.input--invalid]="form.get('userName')?.invalid && (form.get('userName')?.touched || form.get('userName')?.dirty)">
+        <div class="form-error" *ngIf="form.get('userName')?.invalid && (form.get('userName')?.touched || form.get('userName')?.dirty)">
+          {{ 'auth.emailRequired' | t }}
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label-row">
+          <label for="password">{{ 'auth.password' | t }}</label>
+        </div>
+        <input type="password" id="password" class="input" formControlName="password" [class.input--invalid]="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)">
+        <div class="form-error" *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)">
+          <div *ngIf="form.get('password')?.errors?.['required']">
+            {{ 'auth.passwordRequired' | t }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary btn--block" [disabled]="form.invalid || loading()">
+          {{ loading() ? ('auth.loggingIn' | t) : ('auth.login' | t) }}
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        {{ 'auth.dontHaveAccount' | t }} <a routerLink="/register">{{ 'auth.join' | t }}</a>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>

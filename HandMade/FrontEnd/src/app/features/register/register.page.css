@@ -1,0 +1,222 @@
+.auth-page {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding-block: 3rem;
+  background: #f0f0f0; /* match login page background */
+  width: 100vw;
+  margin: 0;
+  box-sizing: border-box;
+  padding-bottom: 6rem; /* space so footer sits lower */
+}
+
+.auth-card {
+  /* standalone card styles removed to avoid conflict with login-layout variant
+     styles below control the auth-card when used inside `.login-layout` */
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111; /* match login title color */
+}
+
+.auth-subtitle {
+  margin: 0.5rem 0 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.input {
+  width: 100%;
+  padding: 0.9rem 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #111;
+  font-size: 0.96rem;
+  transition: all 0.2s ease;
+  height: 44px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #111;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.06);
+}
+
+.form-actions {
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn--block {
+  width: 100%;
+  padding-block: 0.85rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.auth-footer {
+  margin-top: 1.75rem;
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.form-error {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  margin-top: 0.45rem;
+}
+
+.form-hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.45rem;
+}
+
+.alert {
+  background: #fff3f2;
+  color: #7a1f1f;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(211, 47, 47, 0.12);
+}
+
+.alert--success {
+  background: #e6f8ed;
+  color: #1b5e20;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(27, 94, 32, 0.12);
+}
+
+/* Two-column layout and image styles (match login styles) */
+.login-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; /* This makes them equal height */
+  justify-content: center;
+  width: 100%;
+  max-width: 900px; /* narrower, matching login */
+  margin: 0 auto;
+  padding-block: 1.25rem;
+  background: transparent; /* let page background show behind layout */
+  padding: 1.25rem;
+  min-height: auto;
+  flex-wrap: wrap;
+  min-height: 520px; /* slightly reduced so image appears larger relative to form */
+  overflow: visible; /* avoid clipping children when they grow */
+}
+
+.login-image {
+  flex: 0 0 45%; /* increase image width slightly for better balance */
+  min-width: 260px;
+  position: relative; /* For absolute positioning of image */
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.login-image img {
+  position: absolute; /* Take out of flow to fill container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Crop to fit */
+  border-radius: 0;
+  box-shadow: none;
+  display: block;
+  opacity: 0.98;
+}
+
+.auth-card {
+  flex: 1; /* take remaining space beside image */
+  width: 100%;
+  max-width: 100%;
+  padding: 2rem; /* slightly smaller padding to reduce visual bulk */
+  background: #ffffff;
+  border: none;
+  box-shadow: none;
+  border-radius: 10px; /* subtle rounding */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  overflow: auto;
+  align-self: stretch; /* stretch to match image container height */
+}
+
+.btn--primary { background: #111; color: #fff; border: 0; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+
+@media (max-width: 900px) {
+  .login-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .login-image {
+    width: 100%;
+    flex: none;
+    min-height: auto;
+  }
+  
+  .login-image img {
+    position: static;
+    width: 100%;
+    height: auto;
+    max-height: 260px; /* slightly smaller on mobile */
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .auth-card {
+    flex: none;
+    width: 100%;
+    max-width: 460px;
+    border-radius: 0 0 12px 12px;
+  }
+}

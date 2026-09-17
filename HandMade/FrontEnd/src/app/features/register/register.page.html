@@ -1,0 +1,77 @@
+<div class="auth-page">
+  <div class="login-layout">
+    <div class="login-image">
+      <img src="https://images.pexels.com/photos/34890779/pexels-photo-34890779.jpeg" alt="Handmade image">
+    </div>
+
+    <div class="card auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">{{ 'auth.createAccount' | t }}</h1>
+      <p class="auth-subtitle">{{ 'auth.joinCommunity' | t }}</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div *ngIf="serverError()" class="alert">
+        {{ serverError() }}
+      </div>
+      <div *ngIf="successMessage()" class="alert alert--success">
+        {{ successMessage() }}
+      </div>
+      <div class="form-group">
+        <label for="userName">{{ 'auth.username' | t }}</label>
+        <input type="text" id="userName" class="input" formControlName="userName" [placeholder]="i18n.t('auth.username')" [class.input--invalid]="form.get('userName')?.invalid && (form.get('userName')?.touched || form.get('userName')?.dirty)">
+        <div class="form-error" *ngIf="form.get('userName')?.invalid && (form.get('userName')?.touched || form.get('userName')?.dirty)">
+          <div *ngIf="form.get('userName')?.errors?.['required']">{{ 'auth.usernameRequired' | t }}</div>
+          <div *ngIf="form.get('userName')?.errors?.['minlength']">{{ 'auth.usernameMinLength' | t }}</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">{{ 'auth.email' | t }}</label>
+        <input type="email" id="email" class="input" formControlName="email" [placeholder]="i18n.t('auth.email')" [class.input--invalid]="form.get('email')?.invalid && (form.get('email')?.touched || form.get('email')?.dirty)">
+        <div class="form-error" *ngIf="form.get('email')?.invalid && (form.get('email')?.touched || form.get('email')?.dirty)">
+          <div *ngIf="form.get('email')?.errors?.['required']">{{ 'auth.emailRequired' | t }}</div>
+          <div *ngIf="form.get('email')?.errors?.['email']">{{ 'auth.emailInvalid' | t }}</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">{{ 'auth.phone' | t }}</label>
+        <input type="tel" id="phoneNumber" class="input" formControlName="phoneNumber" [placeholder]="i18n.t('auth.phone')" [class.input--invalid]="form.get('phoneNumber')?.invalid && (form.get('phoneNumber')?.touched || form.get('phoneNumber')?.dirty)">
+        <div class="form-error" *ngIf="form.get('phoneNumber')?.invalid && (form.get('phoneNumber')?.touched || form.get('phoneNumber')?.dirty)">
+          <div *ngIf="form.get('phoneNumber')?.errors?.['required']">{{ 'auth.phoneRequired' | t }}</div>
+          <div *ngIf="form.get('phoneNumber')?.errors?.['pattern']">{{ 'auth.phoneInvalid' | t }}</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">{{ 'auth.password' | t }}</label>
+        <input type="password" id="password" class="input" formControlName="password" [placeholder]="i18n.t('auth.password')" [class.input--invalid]="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)">
+        <div class="form-error" *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)">
+          <div *ngIf="form.get('password')?.errors?.['required']">{{ 'auth.passwordRequired' | t }}</div>
+          <div *ngIf="form.get('password')?.errors?.['minlength']">{{ 'auth.passwordMinLength' | t }}</div>
+          <div *ngIf="form.get('password')?.errors?.['pattern']">{{ 'auth.passwordPattern' | t }}</div>
+        </div>
+        <div class="form-hint">{{ 'auth.passwordHint' | t }}</div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">{{ 'auth.confirmPassword' | t }}</label>
+        <input type="password" id="confirmPassword" class="input" formControlName="confirmPassword" [placeholder]="i18n.t('auth.confirmPassword')" 
+               [class.input--invalid]="(form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty) && (form.get('confirmPassword')?.invalid || form.hasError('mismatch'))">
+        <div class="form-error" *ngIf="(form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty)">
+          <div *ngIf="form.get('confirmPassword')?.errors?.['required']">{{ 'auth.confirmPasswordRequired' | t }}</div>
+          <div *ngIf="form.hasError('mismatch') && !form.get('confirmPassword')?.errors?.['required']">{{ 'auth.passwordMismatch' | t }}</div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary btn--block" [disabled]="form.invalid || loading()">
+          {{ loading() ? ('auth.registering' | t) : ('auth.register' | t) }}
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        {{ 'auth.alreadyHaveAccount' | t }} <a routerLink="/login">{{ 'auth.login' | t }}</a>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
