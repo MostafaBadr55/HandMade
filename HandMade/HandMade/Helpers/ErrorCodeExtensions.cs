@@ -33,6 +33,10 @@ namespace HandMade.Helpers
                 ErrorCode.CartNotFound => StatusCodes.Status404NotFound,
                 ErrorCode.CartItemNotFound => StatusCodes.Status404NotFound,
 
+                //Payment ErrorCode mapping
+                ErrorCode.PaymentNotFound => StatusCodes.Status404NotFound,
+                ErrorCode.PaymentAlreadyCompleted => StatusCodes.Status409Conflict,
+
                 _ => MapByRange(errorCode)
             };
         }

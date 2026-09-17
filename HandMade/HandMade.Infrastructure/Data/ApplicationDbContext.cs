@@ -282,6 +282,11 @@ namespace HandMade.Infrastructure.Data
                       .HasForeignKey(p => p.OrderId);
 
                 entity.Property(p => p.Amount).HasPrecision(18, 2);
+
+                // Guards a retried accept from double-charging the client.
+                entity.HasIndex(p => p.IdempotencyKey)
+                      .IsUnique()
+                      .HasFilter("[IdempotencyKey] IS NOT NULL");
             });
 
             // ──────────────────────────────────────────────

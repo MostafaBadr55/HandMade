@@ -1,6 +1,7 @@
 ﻿using HandMade.Application.Interfaces;
 using HandMade.Infrastructure.Data;
 using HandMade.Infrastructure.Identity;
+using HandMade.Infrastructure.Payments;
 using HandMade.Infrastructure.Persistence;
 using HandMade.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,13 @@ namespace HandMade.Infrastructure.Helpers
 
             //QueryableExecutor
             services.AddScoped<IQueryableExecutor, EfQueryableExecutor>();
+            //Payment gateway — swap FakePaymentGateway for a real provider by
+            //registering it here; nothing in the order flow needs to change.
+            services.AddScoped<IPaymentGateway, FakePaymentGateway>();
+
+            //Escrow policy — AutoReleaseDays, read from configuration.
+            services.AddScoped<IEscrowPolicy, EscrowPolicy>();
+
             return services;
         }
     }

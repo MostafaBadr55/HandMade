@@ -74,5 +74,12 @@ namespace HandMade.Application.Shared
         InvalidQuantity = 11005,
         CartItemAlreadyConverted = 11006,
 
+        //Payment & Escrow
+        PaymentNotFound = 13001,
+        PaymentFailed = 13002,
+        PaymentAlreadyCompleted = 13003,
+        EscrowNotHeld = 13004,
+        EscrowAlreadyReleased = 13005,
+
     }
 }
