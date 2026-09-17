@@ -37,6 +37,8 @@ namespace HandMade.Application.Shared
         LabelMustBeProvided = 4001,
         DetailedAddressNotProvided = 4002,
         DefaultAddressNotAdded = 4003,
+        AddressNotFound = 4004,
+        AddressNotOwnedByUser = 4005,
 
         // File Upload
         NoFileProvided = 6001,

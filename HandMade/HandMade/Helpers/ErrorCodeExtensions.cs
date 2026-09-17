@@ -25,6 +25,10 @@ namespace HandMade.Helpers
                 //Shop ErrorCode mapping
                 ErrorCode.ThisOwnerAlreadyHasAShop => StatusCodes.Status403Forbidden,
 
+                //Address ErrorCode mapping
+                ErrorCode.AddressNotFound => StatusCodes.Status404NotFound,
+                ErrorCode.AddressNotOwnedByUser => StatusCodes.Status403Forbidden,
+
                 _ => MapByRange(errorCode)
             };
         }
