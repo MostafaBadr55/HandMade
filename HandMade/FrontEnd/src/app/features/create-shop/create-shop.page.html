@@ -1,0 +1,38 @@
+<div class="container auth-page">
+  <!-- Loading state while checking if user already has a shop -->
+  <div *ngIf="checkingShop()" class="card auth-card loading-card">
+    <p>{{ lang() === 'ar' ? 'جاري التحقق...' : 'Checking...' }}</p>
+  </div>
+
+  <div *ngIf="!checkingShop()" class="card auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">{{ 'shop.createShop' | t }}</h1>
+      <p class="auth-subtitle">{{ 'shop.shopDetails' | t }}</p>
+    </div>
+
+    <div *ngIf="serverError()" class="alert">{{ serverError() }}</div>
+    <div *ngIf="successMessage()" class="alert alert--success">{{ successMessage() }}</div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">{{ 'shop.shopName' | t }}</label>
+        <input id="name" class="input" formControlName="name" />
+      </div>
+      <div class="form-group">
+        <label for="description">{{ 'common.description' | t }}</label>
+        <textarea id="description" class="input" formControlName="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="imageFile">{{ 'shop.shopImage' | t }}</label>
+        <input id="imageFile" type="file" class="input" (change)="form.get('imageFile')?.setValue($any($event.target).files?.[0] ?? null)" />
+      </div>
+      <div class="form-group">
+
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn--primary btn--block" type="submit" [disabled]="loading()">{{ loading() ? ('shop.creating' | t) : ('shop.createShop' | t) }}</button>
+      </div>
+    </form>
+  </div>
+</div>

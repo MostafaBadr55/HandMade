@@ -1,0 +1,202 @@
+<div class="my-shop-page">
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-state">
+    <div class="spinner"></div>
+    <p>{{ lang() === 'ar' ? 'جاري التحميل...' : 'Loading...' }}</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="serverError() && !loading()" class="error-state">
+    <p>{{ serverError() }}</p>
+    <button class="btn-primary" (click)="load()">{{ lang() === 'ar' ? 'إعادة المحاولة' : 'Retry' }}</button>
+  </div>
+
+  <!-- No shop -->
+  <div *ngIf="!loading() && !serverError() && !shop()" class="no-shop-state">
+    <div class="create-shop-card">
+      <span class="material-symbols-outlined create-shop-icon">storefront</span>
+      <h2>{{ lang() === 'ar' ? 'لا يوجد متجر بعد' : 'No shop yet' }}</h2>
+      <p>{{ lang() === 'ar' ? 'أنشئ متجرك لتبدأ بعرض منتجاتك.' : 'Create your shop to start listing products.' }}</p>
+      <button class="btn-create-shop" (click)="createShop()">{{ lang() === 'ar' ? 'إنشاء متجر' : 'Create Shop' }}</button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading() && shop() as s">
+
+    <!-- Pending approval -->
+    <div *ngIf="isPending()" class="pending-state">
+      <div class="pending-card">
+        <span class="material-symbols-outlined pending-icon">hourglass_top</span>
+        <h2>{{ lang() === 'ar' ? 'متجرك قيد المراجعة' : 'Your shop is under review' }}</h2>
+        <p>{{ lang() === 'ar' ? 'سيتم إشعارك عند موافقة المشرف.' : 'You will be notified once an admin approves it.' }}</p>
+        <div class="shop-preview">
+          <img class="shop-preview-image" [src]="s.imageUrl" [alt]="s.name">
+          <div class="shop-preview-content">
+            <div class="shop-preview-info">
+              <strong>{{ s.name }}</strong>
+              <p>{{ s.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rejected -->
+    <div *ngIf="isRejected()" class="rejected-state">
+      <div class="rejected-card">
+        <span class="material-symbols-outlined rejected-icon">cancel</span>
+        <h2>{{ lang() === 'ar' ? 'تم رفض متجرك' : 'Your shop was rejected' }}</h2>
+        <p class="rejection-reason" *ngIf="s.rejectionMessage">{{ s.rejectionMessage }}</p>
+        <p class="rejection-help">{{ lang() === 'ar' ? 'يرجى التواصل مع الدعم لمزيد من المعلومات.' : 'Please contact support for more information.' }}</p>
+      </div>
+    </div>
+
+    <!-- Suspended -->
+    <div *ngIf="isSuspended()" class="rejected-state">
+      <div class="rejected-card">
+        <span class="material-symbols-outlined rejected-icon">block</span>
+        <h2>{{ lang() === 'ar' ? 'تم تعليق متجرك' : 'Your shop is suspended' }}</h2>
+        <p class="rejection-help">{{ lang() === 'ar' ? 'يرجى التواصل مع الدعم.' : 'Please contact support.' }}</p>
+      </div>
+    </div>
+
+    <!-- Active dashboard -->
+    <div *ngIf="isActive()" class="shop-dashboard">
+      <div class="shop-header">
+        <img class="shop-image" [src]="s.imageUrl" [alt]="s.name">
+        <div class="shop-info">
+          <div class="shop-details">
+            <h1>{{ s.name }}</h1>
+            <span class="shop-status">{{ s.status }}</span>
+            <p class="shop-description">{{ s.description }}</p>
+          </div>
+          <div class="shop-header-actions">
+            <button class="btn-edit-shop" (click)="openEditModal()">{{ lang() === 'ar' ? 'تعديل المتجر' : 'Edit Shop' }}</button>
+            <a class="btn-secondary" routerLink="/my-shop/orders">{{ lang() === 'ar' ? 'الطلبات' : 'Orders' }}</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-info">
+            <span class="stat-label">{{ lang() === 'ar' ? 'التقييم' : 'Rating' }}</span>
+            <span class="stat-value">★ {{ s.ratingAverage | number:'1.1-1' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="products-section">
+        <div class="section-header">
+          <h2>{{ lang() === 'ar' ? 'المنتجات' : 'Products' }}</h2>
+          <button class="btn-add" (click)="openAddProduct()">+ {{ lang() === 'ar' ? 'إضافة منتج' : 'Add Product' }}</button>
+        </div>
+
+        <div class="product-tabs">
+          <button [class.active]="productTab() === 'active'" (click)="setProductTab('active')">
+            {{ lang() === 'ar' ? 'نشط' : 'Active' }}
+          </button>
+          <button [class.active]="productTab() === 'inactive'" (click)="setProductTab('inactive')">
+            {{ lang() === 'ar' ? 'غير نشط' : 'Inactive' }}
+          </button>
+          <button [class.active]="productTab() === 'pending'" (click)="setProductTab('pending')">
+            {{ lang() === 'ar' ? 'بانتظار الموافقة' : 'Pending Approval' }}
+          </button>
+        </div>
+
+        <div *ngIf="loadingProducts()" class="loading-state"><div class="spinner spinner-sm"></div></div>
+
+        <div class="products-grid" *ngIf="!loadingProducts() && products().length > 0">
+          <app-product-card *ngFor="let product of products()" [product]="product" mode="seller"
+            (edit)="onEditProduct($event)" (delete)="onDeleteProduct($event)" (toggleStatus)="toggleProductStatus($event)">
+          </app-product-card>
+        </div>
+
+        <div class="empty-products" *ngIf="!loadingProducts() && products().length === 0">
+          <p>{{ lang() === 'ar' ? 'لا توجد منتجات هنا' : 'No products here' }}</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Edit Shop Modal -->
+  <div class="modal-overlay" *ngIf="showEditModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>{{ lang() === 'ar' ? 'تعديل المتجر' : 'Edit Shop' }}</h3>
+        <button class="close-btn" (click)="closeEditModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>{{ lang() === 'ar' ? 'اسم المتجر' : 'Shop Name' }}</label>
+          <input type="text" [ngModel]="editName()" (ngModelChange)="editName.set($event)">
+        </div>
+        <div class="form-group">
+          <label>{{ lang() === 'ar' ? 'الوصف' : 'Description' }}</label>
+          <textarea rows="3" [ngModel]="editDescription()" (ngModelChange)="editDescription.set($event)"></textarea>
+        </div>
+        <div class="form-group">
+          <label>{{ lang() === 'ar' ? 'صورة المتجر (اختياري)' : 'Shop Image (optional)' }}</label>
+          <input type="file" accept=".jpg,.jpeg,.png,.webp" (change)="onEditFileChange($event)">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeEditModal()">{{ lang() === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
+        <button class="btn-primary" (click)="submitEdit()" [disabled]="savingEdit()">{{ lang() === 'ar' ? 'حفظ' : 'Save' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Product Modal -->
+  <div class="modal-overlay" *ngIf="showAddProductModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>{{ lang() === 'ar' ? 'إضافة منتج' : 'Add Product' }}</h3>
+        <button class="close-btn" (click)="closeAddProductModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>{{ lang() === 'ar' ? 'العنوان' : 'Title' }}</label>
+          <input type="text" [ngModel]="newTitle()" (ngModelChange)="newTitle.set($event)">
+        </div>
+        <div class="form-group">
+          <label>{{ lang() === 'ar' ? 'الوصف' : 'Description' }}</label>
+          <textarea rows="3" [ngModel]="newDescription()" (ngModelChange)="newDescription.set($event)"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>{{ lang() === 'ar' ? 'السعر' : 'Price' }}</label>
+            <input type="number" min="0.01" step="0.01" [ngModel]="newPrice()" (ngModelChange)="newPrice.set(+$event)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>{{ lang() === 'ar' ? 'التصنيف' : 'Category' }}</label>
+            <select [ngModel]="newCategoryId()" (ngModelChange)="newCategoryId.set($event); newSubCategoryId.set('')">
+              <option value="">{{ lang() === 'ar' ? 'اختر' : 'Select' }}</option>
+              <option *ngFor="let c of categories()" [value]="c.id">{{ c.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>{{ lang() === 'ar' ? 'التصنيف الفرعي' : 'SubCategory' }}</label>
+            <select [ngModel]="newSubCategoryId()" (ngModelChange)="newSubCategoryId.set($event)">
+              <option value="">{{ lang() === 'ar' ? 'اختر' : 'Select' }}</option>
+              <option *ngFor="let sc of currentSubCategories()" [value]="sc.id">{{ sc.name }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{ lang() === 'ar' ? 'صورة المنتج' : 'Product Image' }}</label>
+          <input type="file" accept=".jpg,.jpeg,.png,.webp" (change)="onAddProductFileChange($event)" [disabled]="uploadInProgress()">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeAddProductModal()">{{ lang() === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
+        <button class="btn-primary" (click)="submitAddProduct()" [disabled]="isAddingProduct() || uploadInProgress()">
+          {{ lang() === 'ar' ? 'إضافة' : 'Add' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

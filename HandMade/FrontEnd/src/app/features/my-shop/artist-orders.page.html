@@ -1,0 +1,98 @@
+<div class="orders-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>{{ lang() === 'ar' ? 'طلبات المتجر' : 'Shop Orders' }}</h1>
+        </div>
+
+        <div class="tabs">
+            <button [class.active]="activeTab() === 'pending'" (click)="setTab('pending')">
+                {{ lang() === 'ar' ? 'يحتاج عرض سعر' : 'Needs a Quote' }}
+            </button>
+            <button [class.active]="activeTab() === 'active'" (click)="setTab('active')">
+                {{ lang() === 'ar' ? 'قيد التنفيذ' : 'Active' }}
+            </button>
+            <button [class.active]="activeTab() === 'history'" (click)="setTab('history')">
+                {{ lang() === 'ar' ? 'السجل' : 'History' }}
+            </button>
+        </div>
+
+        <div class="loading-state" *ngIf="loading()">
+            <div class="spinner"></div>
+        </div>
+
+        <div *ngIf="!loading() && orders().length === 0" class="empty-state">
+            <span class="material-symbols-outlined">shopping_bag</span>
+            <p>{{ lang() === 'ar' ? 'لا توجد طلبات هنا' : 'No orders found' }}</p>
+        </div>
+
+        <div class="orders-list" *ngIf="!loading() && orders().length > 0">
+            <div class="order-card" *ngFor="let order of orders()">
+                <div class="order-header">
+                    <span class="order-number">#{{ order.orderNumber }}</span>
+                    <span class="order-date">{{ order.createdAt | date:'mediumDate' }}</span>
+                    <span class="status-badge" [class]="order.status.toLowerCase()">{{ getStatusLabel(order.status) }}</span>
+                </div>
+
+                <div class="order-body">
+                    <img class="item-image" [src]="resolveImage(order.productImageUrl)" [alt]="order.productTitle">
+                    <div class="order-items">
+                        <div class="item-name">{{ order.productTitle }}</div>
+                        <div class="item-buyer">{{ lang() === 'ar' ? 'العميل' : 'Client' }}: {{ order.buyerUserName }}</div>
+                        <div class="item-qty">x{{ order.quantity }}</div>
+                    </div>
+                    <div class="order-total">
+                        <span>{{ lang() === 'ar' ? 'الإجمالي' : 'Total' }}</span>
+                        <span class="amount">{{ order.grandTotal | currency:'EGP':'symbol':'1.0-2' }}</span>
+                    </div>
+                </div>
+
+                <div class="order-actions">
+                    <div *ngIf="order.status === 'SellerPending'" class="buttons">
+                        <button class="btn-success" (click)="openQuoteModal(order)">
+                            {{ lang() === 'ar' ? 'إرسال عرض سعر' : 'Submit Quote' }}
+                        </button>
+                        <button class="btn-danger" (click)="rejectRequest(order)" [disabled]="processingId() === order.orderId">
+                            {{ lang() === 'ar' ? 'رفض' : 'Decline' }}
+                        </button>
+                    </div>
+
+                    <div *ngIf="order.status === 'BuyerPending'" class="info-message">
+                        {{ lang() === 'ar' ? 'بانتظار قبول العميل ودفعه.' : 'Waiting for the client to accept and pay.' }}
+                    </div>
+
+                    <div *ngIf="order.status === 'InProgress'" class="buttons">
+                        <button class="btn-confirm" (click)="markComplete(order)" [disabled]="processingId() === order.orderId">
+                            {{ lang() === 'ar' ? 'وضع علامة كمكتمل' : 'Mark Complete' }}
+                        </button>
+                    </div>
+
+                    <div *ngIf="order.status === 'CompletedBySeller'" class="info-message success">
+                        {{ lang() === 'ar' ? 'بانتظار تأكيد الاستلام من العميل.' : 'Waiting for the client to confirm delivery.' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quote Modal -->
+    <div class="modal-overlay" *ngIf="showQuoteModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>{{ lang() === 'ar' ? 'إرسال عرض سعر' : 'Submit a Quote' }}</h3>
+                <button class="close-btn" (click)="closeQuoteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label>{{ lang() === 'ar' ? 'السعر' : 'Price' }}</label>
+                <input type="number" min="0.01" step="0.01" [ngModel]="quotePrice()" (ngModelChange)="quotePrice.set(+$event)">
+                <label>{{ lang() === 'ar' ? 'مدة التنفيذ (أيام)' : 'Execution Days' }}</label>
+                <input type="number" min="1" max="365" [ngModel]="quoteDays()" (ngModelChange)="quoteDays.set(+$event)">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" (click)="closeQuoteModal()">{{ lang() === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
+                <button class="btn-danger" (click)="submitQuote()" [disabled]="submittingQuote()">
+                    {{ lang() === 'ar' ? 'إرسال' : 'Submit' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
