@@ -191,6 +191,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("AllowAngular");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
