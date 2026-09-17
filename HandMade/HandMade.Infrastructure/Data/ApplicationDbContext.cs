@@ -115,15 +115,6 @@ namespace HandMade.Infrastructure.Data
                       .HasForeignKey(r => r.ReviewerUserId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                // Reviews received by this user (as reviewed buyer)
-                // TargetId is a shared FK across Product/Shop/User reviews —
-                // no HasForeignKey here; EF resolves it via the Review config below.
-                entity.HasMany(u => u.ReceivedReviews)
-                      .WithOne()
-                      .HasForeignKey(r => r.TargetId)
-                      .HasPrincipalKey(u => u.Id)
-                      .OnDelete(DeleteBehavior.Restrict);
-
                 // Addresses — UserId nullable (SetNull on delete)
                 entity.HasMany<Address>()
                       .WithOne()
@@ -316,30 +307,18 @@ namespace HandMade.Infrastructure.Data
             // ──────────────────────────────────────────────
             // Review
             // ──────────────────────────────────────────────
-            // IMPORTANT: TargetId is a shared FK used for three review targets
-            // (Product, Shop, reviewed Buyer). EF cannot enforce all three as
-            // true FKs simultaneously — use discriminator filtering in queries
-            // (WHERE TargetType = 'Product') and mark each HasForeignKey as
-            // IsRequired(false) so EF doesn't enforce DB-level referential
-            // integrity across all three at once.
+            // IMPORTANT: TargetId is a polymorphic column pointing at a Product, a
+            // Shop or a reviewed Buyer depending on TargetType. It is deliberately
+            // NOT mapped as a relationship to any of them: SQL Server enforces every
+            // FK declared on a column, so three FKs on one column means a product
+            // review violates the shop and user constraints and can never insert.
+            // Queries join manually and MUST filter on TargetType.
             modelBuilder.Entity<Review>(entity =>
             {
                 // Reviewer — configured from IdentityAppUser block above (WrittenReviews).
-                // ReceivedReviews (reviewed buyer) — also configured from IdentityAppUser block.
+                // That one IS a real FK: ReviewerUserId always points at a user.
 
-                entity.HasOne(r => r.Product)
-                      .WithMany(p => p.Reviews)
-                      .HasForeignKey(r => r.TargetId)
-                      .HasPrincipalKey(p => p.Id)
-                      .OnDelete(DeleteBehavior.Restrict)
-                      .IsRequired(false);
-
-                entity.HasOne(r => r.Shop)
-                      .WithMany(s => s.Reviews)
-                      .HasForeignKey(r => r.TargetId)
-                      .HasPrincipalKey(s => s.Id)
-                      .OnDelete(DeleteBehavior.Restrict)
-                      .IsRequired(false);
+                entity.HasIndex(r => r.TargetId);
 
                 entity.HasIndex(r => new { r.ReviewerUserId, r.TargetType, r.TargetId })
                       .IsUnique();

@@ -3,6 +3,7 @@ using HandMade.Application.Features.Shops.Queries.GetPublicShopCards.DTOs;
 using HandMade.Application.Helpers;
 using HandMade.Application.Interfaces;
 using HandMade.Application.Shared;
+using HandMade.Domain.DomainEnums;
 using HandMade.Domain.Entities;
 using MediatR;
 using System;
@@ -20,6 +21,9 @@ namespace HandMade.Application.Features.Shops.Queries.GetPublicShopCards
         {
             var spec = new PublicShopsCardsSpecification(request.criteria);
 
+            // Polymorphic reviews — see Review entity: filter on TargetType.
+            var reviews = unitOfWork.GetRepository<Review>().GetAll();
+
             var query = unitOfWork.GetRepository<Shop>()
                                   .GetAll()
                                   .ApplySpecification(spec)
@@ -29,7 +33,9 @@ namespace HandMade.Application.Features.Shops.Queries.GetPublicShopCards
                                       ShopName = s.Name,
                                       Description = s.Description,
                                       MainImage = s.ImageUrl,
-                                      Rating = s.Reviews.Any() ? s.Reviews.Average(r => (double)r.Rating) : 0
+                                      Rating = reviews
+                                               .Where(r => r.TargetType == ReviewTargetType.Shop && r.TargetId == s.Id)
+                                               .Average(r => (double?)r.Rating) ?? 0
                                   });
 
             var pagedResult = await query.ToPagedResultAsync(

@@ -26,7 +26,6 @@ namespace HandMade.Infrastructure.Identity.IdentityModels
         public ICollection<Dispute> Disputes { get; set; }
         public ICollection<ShopFollower> ShopFollowers { get; set; }
         public ICollection<Review> WrittenReviews { get; set; }  // reviews written by the user
-        public ICollection<Review> ReceivedReviews { get; set; } // reviews about a buyer
 
         public Cart Cart { get; set; }
         public ICollection<CartItem> CartItems { get; set; }

@@ -42,7 +42,6 @@ namespace HandMade.Domain.Entities
         public ICollection<ProductImage> ProductImages { get; set; }
         public ICollection<CartItem> CartItems { get; set; }
         //public ICollection<OrderItem> OrderItems { get; set; }
-        public ICollection<Review> Reviews { get; set; }
         public ICollection<Favorite> Favorites { get; set; }
 
         #endregion

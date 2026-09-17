@@ -2,6 +2,7 @@
 using HandMade.Application.Helpers;
 using HandMade.Application.Interfaces;
 using HandMade.Application.Shared;
+using HandMade.Domain.DomainEnums;
 using HandMade.Domain.Entities;
 using MediatR;
 using System;
@@ -19,6 +20,11 @@ namespace HandMade.Application.Features.Products.Queries.GetPublicProductCard
         {
             var spec = new PublicProductsCardsSpecifications(request.criteria);
 
+            // Reviews are polymorphic: TargetId alone is meaningless without
+            // TargetType, so this is a filtered correlated subquery rather than a
+            // navigation.
+            var reviews = unitOfWork.GetRepository<Review>().GetAll();
+
             var query = unitOfWork.GetRepository<Product>()
                                   .GetAll()
                                   .ApplySpecification(spec)
@@ -30,8 +36,11 @@ namespace HandMade.Application.Features.Products.Queries.GetPublicProductCard
                                     ShopName = p.Shop.Name,
                                     Price = p.Price,
                                     ExpectedDays = p.ExpectedDays,
-                                    AverageRating = p.Reviews.Any()? p.Reviews.Average(r => (double)r.Rating): null,
-                                    ReviewCount = p.Reviews.Count(),
+                                    AverageRating = reviews
+                                                    .Where(r => r.TargetType == ReviewTargetType.Product && r.TargetId == p.Id)
+                                                    .Average(r => (double?)r.Rating),
+                                    ReviewCount = reviews
+                                                    .Count(r => r.TargetType == ReviewTargetType.Product && r.TargetId == p.Id),
                                     RelativePath = p.ProductImages
                                                     .Where(i => i.IsPrimary)
                                                     .Select(i => i.Url)

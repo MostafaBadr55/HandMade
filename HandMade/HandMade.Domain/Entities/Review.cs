@@ -16,7 +16,7 @@ namespace HandMade.Domain.Entities
         // This will refer to: ProductId, ShopId, or BuyerId depending on TargetType
         public Guid TargetId { get; set; }
 
-        // Rating (e.g., 1–5)
+        // Rating (e.g., 1ï¿½5)
         public int Rating { get; set; }
 
         [MaxLength(200)]
@@ -29,12 +29,11 @@ namespace HandMade.Domain.Entities
         // Navigation: the writer of the review
         //public User Reviewer { get; set; }
 
-        // Optional navigation properties (only one will be used depending on TargetType)
-        public Product Product { get; set; }
-        public Shop Shop { get; set; }
-
-        // If the review is about a buyer
-        //public User ReviewedBuyer { get; set; }
+        // NOTE: TargetId is deliberately NOT a mapped relationship.
+        // It points at a Product, a Shop or a buyer depending on TargetType, and a
+        // single column cannot carry three foreign keys â€” SQL Server enforces every
+        // one of them, so any review would violate the two that do not apply.
+        // Queries join manually and MUST filter on TargetType.
     }
 
 }
