@@ -1,0 +1,56 @@
+<div class="product-card" [class]="mode">
+    <div class="product-image">
+        <a [routerLink]="['/product', productId]">
+            <img [src]="imageUrl" [alt]="title" (error)="onImageError($event)">
+        </a>
+
+        <!-- Status Badge -->
+        <span class="status-badge" [ngClass]="status.toLowerCase()"
+            *ngIf="isSeller || isAdmin || (isPublic && status !== 'Active')"
+            (click)="isSeller ? onToggleStatus($event) : null" [style.cursor]="isSeller ? 'pointer' : 'default'">
+            {{ status }}
+        </span>
+
+        <!-- Overlay Actions -->
+        <div class="overlay-actions" *ngIf="isSeller">
+            <button class="btn-icon edit" (click)="onEdit($event)" [title]="lang() === 'ar' ? 'تعديل' : 'Edit'">
+                <span class="material-symbols-outlined">edit</span>
+            </button>
+            <button class="btn-icon delete" (click)="onDelete($event)" [title]="lang() === 'ar' ? 'حذف' : 'Delete'">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="product-content">
+        <h3 class="product-title" [title]="title">
+            <a [routerLink]="['/product', productId]">{{ title }}</a>
+        </h3>
+
+        <div class="product-price">
+            {{ price | currency:'EGP ' }}
+        </div>
+
+        <!-- Admin Actions -->
+        <div class="admin-actions" *ngIf="isAdmin">
+            <button class="btn-approve" (click)="onApprove($event)">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ lang() === 'ar' ? 'قبول' : 'Approve' }}
+            </button>
+            <button class="btn-reject" (click)="onReject($event)">
+                <span class="material-symbols-outlined">cancel</span>
+                {{ lang() === 'ar' ? 'رفض' : 'Reject' }}
+            </button>
+        </div>
+
+        <!-- Public/Buyer Actions -->
+        <div class="public-actions" *ngIf="isPublic || isSeller">
+            <a [routerLink]="['/product', productId]" class="btn-view">
+                {{ lang() === 'ar' ? 'عرض' : 'View' }}
+            </a>
+            <button *ngIf="isPublic" class="btn-cart" (click)="onAddToCart($event)" [disabled]="addingToCart">
+                <span class="material-symbols-outlined">shopping_cart</span>
+            </button>
+        </div>
+    </div>
+</div>

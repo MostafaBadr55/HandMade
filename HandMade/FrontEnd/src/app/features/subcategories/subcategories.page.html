@@ -1,0 +1,26 @@
+<section class="section">
+  <div class="container" *ngIf="vm$ | async as vm">
+    <button class="btn" type="button" (click)="back()">{{ 'subcategories.back' | t }}</button>
+
+    <div class="header card" *ngIf="vm.category as category">
+      <div class="header__image" [style.backgroundImage]="'url(' + resolveImage(category.imageUrl) + ')'"></div>
+      <div class="header__body">
+        <h1 class="header__title">{{ category.name }}</h1>
+        <p class="header__subtitle">{{ 'subcategories.title' | t }}</p>
+      </div>
+    </div>
+
+    <div class="grid list" *ngIf="vm.subCategories.length; else empty">
+      <a class="sub card" *ngFor="let s of vm.subCategories" [routerLink]="['/products']"
+        [queryParams]="{ categoryId: vm.categoryId, subCategoryId: s.id }">
+        <div class="sub__name">{{ s.name }}</div>
+      </a>
+    </div>
+
+    <ng-template #empty>
+      <div class="empty card">
+        <p class="empty__text">{{ 'subcategories.empty' | t }}</p>
+      </div>
+    </ng-template>
+  </div>
+</section>

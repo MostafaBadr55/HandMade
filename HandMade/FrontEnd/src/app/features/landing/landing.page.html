@@ -1,0 +1,83 @@
+<div class="landing-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>{{ 'landing.hero.title' | t }}</h1>
+        <p class="subtitle">{{ 'landing.hero.subtitle' | t }}</p>
+
+        <div class="search-bar-large">
+          <span class="material-symbols-outlined search-icon">search</span>
+          <input type="text" [placeholder]="i18n.t('landing.searchPlaceholder')" [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()" name="landingSearch">
+          <button class="search-btn" (click)="onSearch()">
+            <span class="material-symbols-outlined">center_focus_weak</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories-section">
+    <div class="section-header">
+      <h2>{{ lang() === 'ar' ? 'تصفح التصنيفات' : 'Browse Categories' }}</h2>
+      <p>{{ lang() === 'ar' ? 'اكتشف منتجاتنا المتنوعة حسب التصنيف' : 'Discover our diverse products by category' }}</p>
+    </div>
+    <div class="categories-grid" *ngIf="categories().length > 0; else noCategories">
+      <a *ngFor="let category of categories()" class="category-card" [routerLink]="['/category', category.id]">
+        <div class="category-image"
+          [style.backgroundImage]="'url(' + resolveImage(category.imageUrl) + ')'">
+        </div>
+        <div class="category-overlay">
+          <h3>{{ category.name }}</h3>
+          <span class="explore-btn">
+            {{ lang() === 'ar' ? 'استكشف' : 'Explore' }}
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </span>
+        </div>
+      </a>
+    </div>
+    <ng-template #noCategories>
+      <div class="no-categories">
+        <span class="material-symbols-outlined">category</span>
+        <p>{{ lang() === 'ar' ? 'لا توجد تصنيفات متاحة' : 'No categories available' }}</p>
+      </div>
+    </ng-template>
+  </section>
+
+  <!-- Top Rated Shops -->
+  <section class="products-section" *ngIf="topShops().length > 0">
+    <div class="section-header">
+      <h2>{{ lang() === 'ar' ? 'أفضل المتاجر' : 'Top Rated Shops' }}</h2>
+    </div>
+    <div class="categories-grid">
+      <div *ngFor="let shop of topShops()" class="category-card">
+        <div class="category-image" [style.backgroundImage]="'url(' + resolveImage(shop.mainImage) + ')'"></div>
+        <div class="category-overlay">
+          <h3>{{ shop.shopName }}</h3>
+          <span class="explore-btn">★ {{ shop.rating | number:'1.1-1' }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products-section">
+    <div class="section-header">
+      <h2>{{ lang() === 'ar' ? 'أحدث المنتجات' : 'Latest Products' }}</h2>
+      <a routerLink="/products" class="view-all-btn">
+        {{ lang() === 'ar' ? 'عرض الكل' : 'View All' }}
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+    <div class="products-grid" *ngIf="products().length > 0; else noProducts">
+      <app-product-card *ngFor="let product of products()" [product]="product" mode="public"
+        [addingToCart]="addingIds().includes(product.productId)" (addToCart)="addToCart($event)">
+      </app-product-card>
+    </div>
+    <ng-template #noProducts>
+      <p class="no-data">{{ 'landing.noProducts' | t }}</p>
+    </ng-template>
+  </section>
+</div>

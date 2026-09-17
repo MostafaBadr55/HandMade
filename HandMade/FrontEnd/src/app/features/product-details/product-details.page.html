@@ -1,0 +1,131 @@
+<div class="product-details-page">
+  <div *ngIf="loading()" class="loading">
+    <div class="spinner"></div>
+    {{ lang() === 'ar' ? 'جاري التحميل...' : 'Loading...' }}
+  </div>
+
+  <div *ngIf="!loading() && !product()" class="empty-state">
+    <p>{{ lang() === 'ar' ? 'المنتج غير موجود' : 'Product not found' }}</p>
+  </div>
+
+  <ng-container *ngIf="!loading() && product() as p">
+    <div class="details-grid">
+      <!-- Gallery -->
+      <div class="gallery">
+        <div class="main-image">
+          <img [src]="resolveImage(p.images[activeImageIndex()]?.url)" [alt]="p.productName">
+        </div>
+        <div class="thumbnails" *ngIf="p.images.length > 1">
+          <img *ngFor="let img of p.images; let i = index" [src]="resolveImage(img.url)" [alt]="img.altText"
+            [class.active]="i === activeImageIndex()" (click)="activeImageIndex.set(i)">
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="info">
+        <h1>{{ p.productName }}</h1>
+        <a class="shop-link" [routerLink]="[]">{{ p.shopName }}</a>
+
+        <div class="rating" *ngIf="p.reviewCount > 0">
+          ★ {{ p.averageRating | number:'1.1-1' }} ({{ p.reviewCount }})
+        </div>
+
+        <div class="price">{{ p.price | currency:'EGP ' }}</div>
+        <div class="expected-days">
+          {{ lang() === 'ar' ? 'مدة التنفيذ التقديرية' : 'Estimated turnaround' }}: {{ p.expectedDays }}
+          {{ lang() === 'ar' ? 'يوم' : 'days' }}
+        </div>
+
+        <p class="description">{{ p.description }}</p>
+
+        <!-- Add to cart -->
+        <div class="actions">
+          <input type="number" min="1" [ngModel]="quantity()" (ngModelChange)="quantity.set($event)" class="qty-input">
+          <button class="btn-primary" (click)="addToCart()" [disabled]="addingToCart()">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            {{ lang() === 'ar' ? 'أضف إلى السلة' : 'Add to Cart' }}
+          </button>
+          <button class="btn-secondary" (click)="openQuoteForm()" *ngIf="!showQuoteForm()">
+            {{ lang() === 'ar' ? 'اطلب عرض سعر مخصص' : 'Request a Custom Quote' }}
+          </button>
+        </div>
+
+        <!-- Request a quote form -->
+        <div class="quote-form card" *ngIf="showQuoteForm()">
+          <h3>{{ lang() === 'ar' ? 'طلب عرض سعر' : 'Request a Quote' }}</h3>
+
+          <label>{{ lang() === 'ar' ? 'عنوان الشحن' : 'Shipping Address' }}</label>
+          <select [ngModel]="selectedAddressId()" (ngModelChange)="selectedAddressId.set($event)">
+            <option value="">{{ lang() === 'ar' ? 'اختر عنوانًا' : 'Select an address' }}</option>
+            <option *ngFor="let a of addresses()" [value]="a.id">{{ a.label }} — {{ a.detailedAddress }}</option>
+          </select>
+          <a routerLink="/addresses" class="add-address-link">{{ lang() === 'ar' ? '+ إضافة عنوان جديد' : '+ Add a new address' }}</a>
+
+          <label>{{ lang() === 'ar' ? 'تعليمات خاصة' : 'Special Instructions' }}</label>
+          <textarea [ngModel]="specialInstructions()" (ngModelChange)="specialInstructions.set($event)" rows="3"></textarea>
+
+          <label>{{ lang() === 'ar' ? 'صور مرجعية (اختياري)' : 'Reference Images (optional)' }}</label>
+          <input type="file" accept=".jpg,.jpeg,.png,.webp" (change)="onAttachmentSelected($event)" [disabled]="uploadingAttachment()">
+          <div class="attachment-list" *ngIf="attachmentPaths().length > 0">
+            <span *ngFor="let path of attachmentPaths(); let i = index" class="attachment-chip">
+              {{ path }}
+              <button type="button" (click)="removeAttachment(i)">×</button>
+            </span>
+          </div>
+
+          <div class="quote-form-actions">
+            <button class="btn-primary" (click)="submitQuoteRequest()" [disabled]="submittingQuote()">
+              {{ lang() === 'ar' ? 'إرسال الطلب' : 'Submit Request' }}
+            </button>
+            <button class="btn-cancel" (click)="showQuoteForm.set(false)">
+              {{ lang() === 'ar' ? 'إلغاء' : 'Cancel' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="reviews-section">
+      <div class="reviews-header">
+        <h2>{{ lang() === 'ar' ? 'التقييمات' : 'Reviews' }}</h2>
+        <button *ngIf="canReview() && !showReviewForm()" class="btn-secondary" (click)="showReviewForm.set(true)">
+          {{ lang() === 'ar' ? 'اكتب تقييمًا' : 'Write a Review' }}
+        </button>
+      </div>
+
+      <div class="review-form card" *ngIf="showReviewForm()">
+        <label>{{ lang() === 'ar' ? 'التقييم' : 'Rating' }}</label>
+        <select [ngModel]="reviewRating()" (ngModelChange)="reviewRating.set(+$event)">
+          <option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }} ★</option>
+        </select>
+        <label>{{ lang() === 'ar' ? 'العنوان' : 'Title' }}</label>
+        <input type="text" [ngModel]="reviewTitle()" (ngModelChange)="reviewTitle.set($event)">
+        <label>{{ lang() === 'ar' ? 'التعليق' : 'Comment' }}</label>
+        <textarea rows="3" [ngModel]="reviewContent()" (ngModelChange)="reviewContent.set($event)"></textarea>
+        <div class="quote-form-actions">
+          <button class="btn-primary" (click)="submitReview()" [disabled]="submittingReview()">
+            {{ lang() === 'ar' ? 'إرسال' : 'Submit' }}
+          </button>
+          <button class="btn-cancel" (click)="showReviewForm.set(false)">
+            {{ lang() === 'ar' ? 'إلغاء' : 'Cancel' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="review-list" *ngIf="p.reviews.length > 0; else noReviews">
+        <div class="review-item" *ngFor="let r of p.reviews">
+          <div class="review-item-header">
+            <strong>{{ r.reviewerName }}</strong>
+            <span class="review-rating">★ {{ r.rating }}</span>
+          </div>
+          <div class="review-title">{{ r.reviewTitle }}</div>
+          <p>{{ r.reviewContent }}</p>
+        </div>
+      </div>
+      <ng-template #noReviews>
+        <p class="no-data">{{ lang() === 'ar' ? 'لا توجد تقييمات بعد' : 'No reviews yet' }}</p>
+      </ng-template>
+    </div>
+  </ng-container>
+</div>

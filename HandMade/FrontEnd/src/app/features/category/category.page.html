@@ -1,0 +1,37 @@
+<div class="category-page">
+  <div class="page-header">
+    <h1>
+      <span class="material-symbols-outlined">category</span>
+      <ng-container *ngIf="categoryName(); else defaultTitle">{{ categoryName() }}</ng-container>
+      <ng-template #defaultTitle>{{ lang() === 'ar' ? 'التصنيف' : 'Category' }}</ng-template>
+    </h1>
+  </div>
+
+  <div *ngIf="loading()" class="loading">
+    <div class="spinner"></div>
+    {{ lang() === 'ar' ? 'جاري التحميل...' : 'Loading...' }}
+  </div>
+
+  <div *ngIf="!loading() && products().length > 0" class="products-grid">
+    <app-product-card *ngFor="let product of products()" [product]="product" mode="public"
+      [addingToCart]="adding().includes(product.productId)" (addToCart)="addToCart($event)">
+    </app-product-card>
+  </div>
+
+  <div *ngIf="!loading() && products().length === 0" class="empty-state">
+    <span class="material-symbols-outlined">inventory_2</span>
+    <p>{{ lang() === 'ar' ? 'لا توجد منتجات في هذا التصنيف' : 'No products in this category' }}</p>
+  </div>
+
+  <div *ngIf="products().length > 0" class="pagination">
+    <button [disabled]="pageNumber() <= 1" (click)="prevPage()">
+      <span class="material-symbols-outlined">chevron_left</span>
+      {{ lang() === 'ar' ? 'السابق' : 'Previous' }}
+    </button>
+    <span class="page-number">{{ pageNumber() }} / {{ totalPages() }}</span>
+    <button [disabled]="pageNumber() >= totalPages()" (click)="nextPage()">
+      {{ lang() === 'ar' ? 'التالي' : 'Next' }}
+      <span class="material-symbols-outlined">chevron_right</span>
+    </button>
+  </div>
+</div>
