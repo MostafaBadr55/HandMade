@@ -1,0 +1,75 @@
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer-col brand-col">
+      <div class="brand">
+        <span class="brand__icon">⚱️</span>
+        <span class="brand__name">{{ 'app.name' | t }}</span>
+      </div>
+      <p class="footer-desc">
+        {{ 'footer.tagline' | t }}
+      </p>
+      <div class="contact-info">
+        <div class="contact-item">
+          <span class="icon">✉️</span>
+          <div>
+            <strong>example@domain.com</strong>
+            <span>{{ 'footer.emailUs' | t }}</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="icon">📞</span>
+          <div>
+            <strong>+1 234 567 89</strong>
+            <span>{{ 'footer.callUs' | t }}</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="icon">📍</span>
+          <div>
+            <strong>Cairo, Egypt</strong>
+            <span>{{ 'footer.ourLocation' | t }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h3>{{ 'footer.usefulLinks' | t }}</h3>
+      <ul>
+        <li><a href="#">{{ 'footer.customerServices' | t }}</a></li>
+        <li><a href="#">{{ 'footer.orderTracking' | t }}</a></li>
+        <li><a href="#">{{ 'footer.wishlist' | t }}</a></li>
+        <li><a href="#">{{ 'footer.payment' | t }}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>{{ 'footer.aboutUs' | t }}</h3>
+      <ul>
+        <li><a href="#">{{ 'footer.aboutUs' | t }}</a></li>
+        <li><a href="#">{{ 'footer.contactUs' | t }}</a></li>
+        <li><a href="#">{{ 'footer.ourBlog' | t }}</a></li>
+        <li><a href="#">{{ 'footer.faqs' | t }}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col newsletter-col">
+      <h3>{{ 'footer.newsletter' | t }}</h3>
+      <p>{{ 'footer.newsletterText' | t }}</p>
+      <div class="newsletter-form">
+        <input type="email" [placeholder]="i18n.t('auth.email')">
+        <button>{{ 'footer.subscribe' | t }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>{{ 'footer.copyright' | t }}</p>
+    <div class="social-links">
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
+      <a href="#">Google</a>
+      <a href="#">Youtube</a>
+    </div>
+  </div>
+</footer>

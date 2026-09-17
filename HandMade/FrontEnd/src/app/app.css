@@ -1,0 +1,19 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  margin-left: 80px; /* Adjusted for narrower sidebar */
+  flex-grow: 1;
+  width: calc(100% - 80px);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  padding: 20px;
+  background-color: #fff;
+  flex-grow: 1;
+}
+

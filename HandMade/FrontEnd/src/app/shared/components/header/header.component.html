@@ -1,0 +1,55 @@
+<header class="header">
+  <div *ngIf="!hideTopBar()" class="header-top">
+    <div class="search-bar">
+      <span class="material-symbols-outlined search-icon">search</span>
+      <input type="text" [placeholder]="i18n.t('common.search')" [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()" name="headerSearch">
+      <button class="search-btn" (click)="onSearch()">
+        <span class="material-symbols-outlined">center_focus_weak</span>
+      </button>
+    </div>
+
+    <div class="header-actions">
+      <a *ngIf="isAdmin()" routerLink="/admin" class="btn-admin">
+        <span class="material-symbols-outlined">admin_panel_settings</span>
+        {{ 'nav.adminDashboard' | t }}
+      </a>
+      <a *ngIf="isClient()" routerLink="/cart" class="nav-link cart-link" [title]="'cart.title' | t">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <span *ngIf="cartCount() > 0" class="cart-badge">{{ cartCount() }}</span>
+      </a>
+      <a *ngIf="!isLoggedIn()" routerLink="/login" class="btn-submit">{{ 'nav.login' | t }}</a>
+      <div *ngIf="isLoggedIn()" class="user-dropdown">
+        <span class="user-name">
+          <span class="material-symbols-outlined">account_circle</span>
+          {{ userName() }}
+        </span>
+        <div class="dropdown-menu">
+          <div class="dropdown-menu-inner">
+            <a [routerLink]="profileLink()" class="dropdown-item">
+              <span class="material-symbols-outlined">{{ isArtist() ? 'storefront' : isAdmin() ? 'admin_panel_settings' : 'person' }}</span>
+              {{ isArtist() ? ('nav.myShop' | t) : isAdmin() ? ('nav.adminDashboard' | t) : ('nav.profile' | t) }}
+            </a>
+            <a *ngIf="isClient()" routerLink="/orders" class="dropdown-item">
+              <span class="material-symbols-outlined">assignment</span>
+              {{ lang() === 'ar' ? 'طلباتي' : 'My Orders' }}
+            </a>
+            <div class="dropdown-divider"></div>
+            <button class="logout-btn" (click)="logout()">
+              <span class="material-symbols-outlined">logout</span>
+              {{ 'nav.logout' | t }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="categories-nav">
+    <div class="categories-scroll">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="category-tab">{{ 'nav.home' | t }}</a>
+      <div class="divider-vertical"></div>
+      <a routerLink="/products" routerLinkActive="active" class="category-tab">{{ lang() === 'ar' ? 'المنتجات' : 'Products' }}</a>
+    </div>
+  </nav>
+</header>
