@@ -170,6 +170,9 @@ using (var scope = app.Services.CreateScope())
     try
     {
         await DataSeeder.SeedSuperAdminAsync(services);
+
+        if (app.Environment.IsDevelopment() && app.Configuration.GetValue<bool>("SeedTestData"))
+            await TestDataSeeder.SeedTestDataAsync(services);
     }
     catch (Exception ex)
     {
