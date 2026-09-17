@@ -1,0 +1,54 @@
+<div class="addresses-page">
+  <div class="page-header">
+    <h1>{{ lang() === 'ar' ? 'عناويني' : 'My Addresses' }}</h1>
+    <button class="btn-primary" (click)="openNew()" *ngIf="!showForm()">
+      + {{ lang() === 'ar' ? 'إضافة عنوان' : 'Add Address' }}
+    </button>
+  </div>
+
+  <div *ngIf="loading()" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="form card" *ngIf="showForm()">
+    <label>{{ lang() === 'ar' ? 'التسمية' : 'Label' }}</label>
+    <input type="text" [ngModel]="label()" (ngModelChange)="label.set($event)"
+      [placeholder]="lang() === 'ar' ? 'المنزل، العمل...' : 'Home, Work...'">
+
+    <label>{{ lang() === 'ar' ? 'العنوان التفصيلي' : 'Detailed Address' }}</label>
+    <textarea rows="3" [ngModel]="detailedAddress()" (ngModelChange)="detailedAddress.set($event)"></textarea>
+
+    <label class="checkbox-label" *ngIf="!editingId()">
+      <input type="checkbox" [ngModel]="isDefault()" (ngModelChange)="isDefault.set($event)">
+      {{ lang() === 'ar' ? 'تعيين كعنوان افتراضي' : 'Set as default' }}
+    </label>
+
+    <div class="form-actions">
+      <button class="btn-primary" (click)="save()" [disabled]="saving()">
+        {{ lang() === 'ar' ? 'حفظ' : 'Save' }}
+      </button>
+      <button class="btn-cancel" (click)="showForm.set(false)">
+        {{ lang() === 'ar' ? 'إلغاء' : 'Cancel' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="address-list" *ngIf="!loading()">
+    <div class="address-card" *ngFor="let a of addresses()" [class.default]="a.isDefault">
+      <div class="address-info">
+        <strong>{{ a.label }}</strong>
+        <span class="default-badge" *ngIf="a.isDefault">{{ lang() === 'ar' ? 'افتراضي' : 'Default' }}</span>
+        <p>{{ a.detailedAddress }}</p>
+      </div>
+      <div class="address-actions">
+        <button (click)="openEdit(a)">{{ lang() === 'ar' ? 'تعديل' : 'Edit' }}</button>
+        <button *ngIf="!a.isDefault" (click)="setDefault(a)">{{ lang() === 'ar' ? 'تعيين كافتراضي' : 'Set Default' }}</button>
+        <button class="danger" (click)="remove(a)">{{ lang() === 'ar' ? 'حذف' : 'Delete' }}</button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="addresses().length === 0">
+      <p>{{ lang() === 'ar' ? 'لا توجد عناوين محفوظة بعد' : 'No saved addresses yet' }}</p>
+    </div>
+  </div>
+</div>

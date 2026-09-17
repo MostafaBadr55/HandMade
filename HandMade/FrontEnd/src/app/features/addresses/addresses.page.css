@@ -1,0 +1,17 @@
+.addresses-page { max-width: 700px; margin: 0 auto; padding: 24px 16px 64px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.loading { text-align: center; padding: 40px; }
+.card { border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-bottom: 20px; background: #fafafa; }
+.form label { display: block; margin-top: 10px; font-weight: 600; font-size: .9rem; }
+.form input[type=text], .form textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px; margin-top: 4px; box-sizing: border-box; }
+.checkbox-label { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-weight: 400; }
+.form-actions { display: flex; gap: 8px; margin-top: 14px; }
+.btn-primary { background: #222; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; }
+.btn-cancel { background: none; border: 1px solid #ccc; padding: 10px 18px; border-radius: 8px; cursor: pointer; }
+.address-card { border: 1px solid #eee; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.address-card.default { border-color: #222; }
+.default-badge { background: #222; color: #fff; font-size: .7rem; padding: 2px 8px; border-radius: 12px; margin-left: 8px; }
+.address-actions { display: flex; flex-direction: column; gap: 6px; }
+.address-actions button { border: 1px solid #ddd; background: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: .8rem; }
+.address-actions button.danger { color: #c0392b; border-color: #c0392b; }
+.empty-state { text-align: center; color: #888; padding: 40px 0; }
